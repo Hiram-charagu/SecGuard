@@ -634,10 +634,14 @@ body[data-page="website"] {
   text-shadow: 0 0 26px rgba(115, 243, 232, 0.18);
 }
 
-.textured-footer .footer-column a {
+.textured-footer .footer-column a,
+.textured-footer .footer-column span {
   color: #aebbd0;
   font-size: 1.02rem;
   font-weight: 800;
+}
+
+.textured-footer .footer-column a {
   transition: color 160ms ease, transform 160ms ease;
 }
 
