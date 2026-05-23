@@ -29,10 +29,14 @@ Secguard is being structured as a production-style device intelligence and secur
 ├── analytics.html             # Security analytics
 ├── audit-logs.html            # System audit logs
 ├── settings.html              # Configuration and settings
-├── styles.css                 # Shared website and dashboard styling
-├── website.js                 # Public website navigation and form behavior
-├── app.js                     # Authenticated platform rendering
-├── data-service.js            # Browser-side API integration layer
+├── css/
+│   ├── base.css               # Shared variables, reset, buttons, and forms
+│   ├── website.css            # Public website and landing-page styles
+│   └── platform.css           # Authenticated dashboard styles
+├── js/
+│   ├── website.js             # Public website navigation and form behavior
+│   ├── platform.js            # Authenticated platform rendering
+│   └── data-service.js        # Browser-side API integration layer
 ├── mock-data.js               # Server-side ERP simulation data
 ├── server.js                  # Local API and static file server
 ├── package.json               # Node server dependencies and start script
