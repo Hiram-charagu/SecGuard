@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Device Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/platform.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/data-service.js"></script>
+  <script src="js/auth.js"></script>
+</head>
+<body data-page="device-detail">
+  <div class="page-shell">
+    <aside class="sidebar" data-platform-nav></aside>
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>Live</strong> device dossier</small>
+          <h2>Device detail</h2>
+          <p>Inspect the full lifecycle, fraud links, owner record, warranty state, and telemetry history for one handset.</p>
+        </div>
+        <a class="btn" href="device-intelligence.html">Back to devices</a>
+      </div>
+      <div id="device-detail-content"></div>
+    </section>
+  </div>
+  <script src="js/platform-nav.js"></script>
+  <script src="js/platform.js"></script>
+</body>
+</html>

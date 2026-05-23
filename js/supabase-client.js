@@ -12,9 +12,12 @@ const SecguardSupabase = (() => {
   }
 
   async function login(email, password, role) {
-    window.SecguardAuth?.setRole(role || 'company_admin');
     if (!client) return { data: null, error: null, local: true };
-    return client.auth.signInWithPassword({ email, password });
+    const result = await client.auth.signInWithPassword({ email, password });
+    if (!result.error && result.data?.user) {
+      window.SecguardAuth?.setRole(result.data.user.user_metadata?.role || role || 'company_admin');
+    }
+    return result;
   }
 
   async function signup(email, password, role) {
@@ -28,22 +31,37 @@ const SecguardSupabase = (() => {
   }
 
   async function googleLogin(role) {
-    window.SecguardAuth?.setRole(role || 'company_admin');
     if (!client) return { error: new Error('Supabase client is not available') };
     return client.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/${routeForRole(role)}` },
+      options: {
+        redirectTo: `${window.location.origin}/${routeForRole(role)}`,
+        queryParams: { access_type: 'offline', prompt: 'consent' },
+      },
     });
   }
 
+  async function getSession() {
+    if (!client) return { data: { session: null }, error: null };
+    return client.auth.getSession();
+  }
+
+  async function getUser() {
+    if (!client) return { data: { user: null }, error: null };
+    return client.auth.getUser();
+  }
+
   async function logout() {
-    try {
-      localStorage.removeItem('secguard_active_role');
-    } catch (error) {
-      console.warn('Could not clear local Secguard role.', error);
-    }
+    window.SecguardAuth?.clearSessionState();
     if (client) await client.auth.signOut();
     window.location.href = 'login.html';
+  }
+
+  async function resetPassword(email) {
+    if (!client) return { error: new Error('Supabase client is not available') };
+    return client.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/login.html`,
+    });
   }
 
   async function uploadFile(bucket, path, file) {
@@ -61,6 +79,6 @@ const SecguardSupabase = (() => {
 
   window.secguardSupabase = client;
 
-  return { client, enabled, login, signup, googleLogin, logout, uploadFile, subscribe, routeForRole };
+  return { client, enabled, login, signup, googleLogin, getSession, getUser, logout, resetPassword, uploadFile, subscribe, routeForRole };
 })();
 

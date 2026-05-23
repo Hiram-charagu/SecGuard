@@ -1,10 +1,20 @@
 const SecguardAuth = (() => {
+  const publicPages = ['index.html', 'about.html', 'features.html', 'pricing.html', 'security.html', 'contact.html', 'demo-request.html', 'portals.html', 'login.html'];
+  const state = {
+    role: null,
+    user: null,
+    session: null,
+    ready: false,
+    demo: false,
+  };
+
   const links = [
     ['dashboard.html', 'Dashboard'],
     ['organizations.html', 'Organizations'],
     ['branches.html', 'Branches'],
     ['staff.html', 'Staff & Roles'],
     ['device-intelligence.html', 'Device Intelligence'],
+    ['device-detail.html', 'Device Detail'],
     ['erp-connector.html', 'ERP Connector'],
     ['fraud.html', 'Fraud Detection'],
     ['theft-reports.html', 'Theft Reports'],
@@ -13,6 +23,7 @@ const SecguardAuth = (() => {
     ['customer.html', 'Customers'],
     ['analytics.html', 'Analytics'],
     ['audit-logs.html', 'Audit Logs'],
+    ['reports.html', 'Reports'],
     ['security-policies.html', 'Security Policies'],
     ['settings.html', 'Settings'],
   ];
@@ -29,29 +40,83 @@ const SecguardAuth = (() => {
   const access = {
     super_admin: links.map(([href]) => href),
     company_admin: links.map(([href]) => href).filter(href => href !== 'organizations.html'),
-    security_officer: ['fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'audit-logs.html'],
-    investigator: ['recovery-cases.html', 'theft-reports.html', 'tracking.html', 'customer.html', 'audit-logs.html'],
-    sales_staff: ['device-intelligence.html', 'customer.html', 'tracking.html'],
-    customer: ['customer.html', 'tracking.html'],
+    security_officer: ['fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'audit-logs.html', 'device-detail.html', 'reports.html'],
+    investigator: ['recovery-cases.html', 'theft-reports.html', 'tracking.html', 'customer.html', 'audit-logs.html', 'device-detail.html', 'reports.html'],
+    sales_staff: ['device-intelligence.html', 'device-detail.html', 'customer.html', 'tracking.html'],
+    customer: ['customer.html', 'tracking.html', 'device-detail.html'],
   };
 
-  function getRole() {
+  function safeStorageGet(key) {
     try {
-      return localStorage.getItem('secguard_active_role') || 'company_admin';
+      return localStorage.getItem(key);
     } catch (error) {
-      console.warn('Could not read Secguard role from local storage.', error);
-      return 'company_admin';
+      console.warn(`Could not read ${key} from local storage.`, error);
+      return null;
     }
   }
 
-  function setRole(role) {
-    const nextRole = routes[role] ? role : 'company_admin';
+  function safeStorageSet(key, value) {
     try {
-      localStorage.setItem('secguard_active_role', nextRole);
+      localStorage.setItem(key, value);
     } catch (error) {
-      console.warn('Could not save Secguard role to local storage.', error);
+      console.warn(`Could not save ${key} to local storage.`, error);
     }
+  }
+
+  function safeStorageRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn(`Could not remove ${key} from local storage.`, error);
+    }
+  }
+
+  function normalizeRole(role) {
+    return routes[role] ? role : 'company_admin';
+  }
+
+  function roleFromUser(user) {
+    return normalizeRole(user?.app_metadata?.role || user?.user_metadata?.role || user?.user_metadata?.portal_role || user?.user_metadata?.secguard_role);
+  }
+
+  function getRole() {
+    if (state.role) return state.role;
+    return normalizeRole(safeStorageGet('secguard_active_role') || 'company_admin');
+  }
+
+  function setRole(role, options = {}) {
+    const nextRole = normalizeRole(role);
+    state.role = nextRole;
+    if (!options.memoryOnly) safeStorageSet('secguard_active_role', nextRole);
     return nextRole;
+  }
+
+  async function initSession() {
+    if (state.ready) return state;
+    const supabase = window.SecguardSupabase;
+    if (supabase?.getSession) {
+      const { data } = await supabase.getSession();
+      state.session = data?.session || null;
+      state.user = state.session?.user || null;
+      if (state.user) {
+        setRole(roleFromUser(state.user), { memoryOnly: false });
+        state.ready = true;
+        return state;
+      }
+    }
+
+    state.demo = safeStorageGet('secguard_demo_session') === 'true';
+    if (state.demo) setRole(safeStorageGet('secguard_active_role') || 'company_admin');
+    state.ready = true;
+    return state;
+  }
+
+  function isPublicPage(page = currentFile()) {
+    return publicPages.includes(page);
+  }
+
+  function isAuthenticated() {
+    return Boolean(state.session || state.demo || safeStorageGet('secguard_demo_session') === 'true');
   }
 
   function routeForRole(role = getRole()) {
@@ -67,10 +132,16 @@ const SecguardAuth = (() => {
   }
 
   function canAccess(page = currentFile(), role = getRole()) {
+    if (isPublicPage(page)) return true;
     return allowedPages(role).includes(page);
   }
 
   function enforce() {
+    if (isPublicPage(currentFile())) return true;
+    if (!isAuthenticated()) {
+      location.href = `login.html?next=${encodeURIComponent(currentFile())}`;
+      return false;
+    }
     const role = getRole();
     if (!canAccess(currentFile(), role)) {
       location.href = routeForRole(role);
@@ -81,7 +152,7 @@ const SecguardAuth = (() => {
 
   function visibleLinks(role = getRole()) {
     const allowed = allowedPages(role);
-    return links.filter(([href]) => allowed.includes(href));
+    return links.filter(([href]) => allowed.includes(href) && href !== 'device-detail.html');
   }
 
   function labelFor(href, label, role = getRole()) {
@@ -89,5 +160,31 @@ const SecguardAuth = (() => {
     return label;
   }
 
-  return { links, routes, access, getRole, setRole, routeForRole, allowedPages, canAccess, enforce, visibleLinks, labelFor };
+  function clearSessionState() {
+    state.role = null;
+    state.user = null;
+    state.session = null;
+    state.ready = false;
+    state.demo = false;
+    safeStorageRemove('secguard_active_role');
+    safeStorageRemove('secguard_demo_session');
+  }
+
+  return {
+    links,
+    routes,
+    access,
+    initSession,
+    isAuthenticated,
+    getRole,
+    setRole,
+    routeForRole,
+    allowedPages,
+    canAccess,
+    enforce,
+    visibleLinks,
+    labelFor,
+    clearSessionState,
+    roleFromUser,
+  };
 })();

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/platform.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/data-service.js"></script>
+  <script src="js/auth.js"></script>
+</head>
+<body data-page="reports">
+  <div class="page-shell">
+    <aside class="sidebar" data-platform-nav></aside>
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>CSV</strong> management exports</small>
+          <h2>Reports center</h2>
+          <p>Export operational reports for fraud, inventory, branch performance, staff activity, and recovery workflows.</p>
+        </div>
+      </div>
+
+      <article class="card">
+        <div class="top-bar">
+          <div>
+            <small>Report builder</small>
+            <strong>Available operational reports</strong>
+          </div>
+          <div class="top-actions">
+            <input class="table-search" type="date" aria-label="Start date">
+            <input class="table-search" type="date" aria-label="End date">
+          </div>
+        </div>
+        <div class="table-wrapper" style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Report</th>
+                <th>Records</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="reports-table-body"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </div>
+  <script src="js/platform-nav.js"></script>
+  <script src="js/platform.js"></script>
+</body>
+</html>

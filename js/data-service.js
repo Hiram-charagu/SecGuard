@@ -123,6 +123,11 @@ const seedPlatformData = {
     { id: 'inv_002', case_number: 'FT-289', device_id: 'device_005', type: 'High-risk SIM event', status: 'assigned', analyst: 'H. Patel', updated_at: new Date(Date.now() - 37 * 60000).toISOString() },
     { id: 'inv_003', case_number: 'FT-288', device_id: 'device_002', type: 'ERP integration mismatch', status: 'pending-review', analyst: 'S. Kim', updated_at: new Date(Date.now() - 58 * 60000).toISOString() },
   ],
+  tracking_logs: [
+    { id: 'track_001', device_id: 'device_001', latitude: -1.286389, longitude: 36.817223, network_type: '4G', carrier: 'Safaricom', battery: 72, sim_serial_hash: 'sim_9a21', event_time: new Date(Date.now() - 11 * 60000).toISOString() },
+    { id: 'track_002', device_id: 'device_002', latitude: -1.265, longitude: 36.804, network_type: '5G', carrier: 'Airtel', battery: 61, sim_serial_hash: 'sim_21fa', event_time: new Date(Date.now() - 28 * 60000).toISOString() },
+    { id: 'track_003', device_id: 'device_005', latitude: -1.25, longitude: 36.89, network_type: '4G', carrier: 'Safaricom', battery: 44, sim_serial_hash: 'sim_77bd', event_time: new Date(Date.now() - 9 * 60000).toISOString() },
+  ],
   audit_logs: [
     { time: new Date(Date.now() - 11 * 60000).toISOString(), actor: 'H. Patel', action: 'Reviewed fraud case', target: 'IMEI 3520 0912 0951 002', result: 'Completed' },
     { time: new Date(Date.now() - 33 * 60000).toISOString(), actor: 'S. Kim', action: 'Updated ERP sync rule', target: 'Inventory policy', result: 'Pending' },
@@ -150,9 +155,16 @@ class DataManager {
     this.data = clonePlatformData(seedPlatformData);
     this.storageAvailable = true;
     this.lastError = null;
+    this.remoteReady = false;
+    this.usingRemote = false;
   }
 
   async load() {
+    if (this.hasRemote()) {
+      const loaded = await this.loadRemote();
+      if (loaded) return this.data;
+    }
+
     try {
       const saved = localStorage.getItem(this.config.storageKey);
       this.data = saved ? JSON.parse(saved) : clonePlatformData(seedPlatformData);
@@ -166,6 +178,181 @@ class DataManager {
       console.warn('Secguard storage is unavailable. Running in memory-only mode.', error);
     }
     return this.data;
+  }
+
+  hasRemote() {
+    return Boolean(window.SecguardSupabase?.enabled?.() && window.SecguardSupabase?.client);
+  }
+
+  async query(table, select = '*') {
+    const { data, error } = await window.SecguardSupabase.client.from(table).select(select);
+    if (error) throw error;
+    return data || [];
+  }
+
+  async loadRemote() {
+    try {
+      const [companies, branches, staff, devices, customers, alerts, trackingLogs, auditLogs, settingsRows] = await Promise.all([
+        this.query('companies'),
+        this.query('branches'),
+        this.query('staff_profiles'),
+        this.query('devices'),
+        this.query('customers'),
+        this.query('fraud_alerts'),
+        this.query('tracking_logs'),
+        this.query('audit_logs'),
+        this.query('company_settings').catch(() => []),
+      ]);
+
+      this.data = {
+        ...clonePlatformData(seedPlatformData),
+        organization: this.mapOrganization(companies[0]),
+        branches: branches.map(row => this.mapBranch(row)),
+        staff: staff.map(row => this.mapStaff(row)),
+        devices: devices.map(row => this.mapDevice(row)),
+        customers: customers.map(row => this.mapCustomer(row, devices)),
+        fraud_alerts: alerts.map(row => this.mapFraudAlert(row)),
+        tracking_logs: trackingLogs.map(row => this.mapTrackingLog(row)),
+        audit_logs: auditLogs.map(row => this.mapAuditLog(row)),
+        settings: settingsRows[0]?.settings || seedPlatformData.settings,
+      };
+      if (!this.data.branches.length) this.data.branches = clonePlatformData(seedPlatformData.branches);
+      if (!this.data.staff.length) this.data.staff = clonePlatformData(seedPlatformData.staff);
+      this.normalizeDates();
+      this.remoteReady = true;
+      this.usingRemote = true;
+      this.subscribeRemote();
+      return true;
+    } catch (error) {
+      this.remoteReady = false;
+      this.usingRemote = false;
+      this.lastError = error;
+      console.warn('Supabase data load failed. Falling back to local demo data.', error);
+      return false;
+    }
+  }
+
+  subscribeRemote() {
+    if (this.remoteSubscribed || !window.SecguardSupabase?.subscribe) return;
+    this.remoteSubscribed = true;
+    ['devices', 'fraud_alerts', 'tracking_logs', 'audit_logs', 'customers'].forEach(table => {
+      window.SecguardSupabase.subscribe(table, async () => {
+        await this.loadRemote();
+        window.dispatchEvent(new CustomEvent('secguard:data-updated'));
+      });
+    });
+  }
+
+  mapOrganization(row = {}) {
+    return {
+      id: row.id || 'org_sec_2026',
+      name: row.name || 'Secguard Retail Security',
+      type: row.type || 'phone-retailer',
+      subscription: row.plan || row.subscription || 'enterprise',
+      status: row.status || 'active',
+      branches: Number(row.branches || 0),
+      staff: Number(row.staff || 0),
+    };
+  }
+
+  mapBranch(row = {}) {
+    return {
+      id: row.id,
+      name: row.name,
+      location: row.location || row.city || row.manager || 'Branch network',
+      city: row.city || '',
+      staff: Number(row.staff || 0),
+      devices: Number(row.devices || 0),
+      alerts: Number(row.alerts || 0),
+      status: row.status || 'active',
+    };
+  }
+
+  mapStaff(row = {}) {
+    return {
+      id: row.id,
+      name: row.name,
+      role: row.role,
+      branch: row.branch_id || row.branch || '',
+      email: row.email || '',
+      active: row.status !== 'inactive',
+    };
+  }
+
+  mapDevice(row = {}) {
+    return {
+      id: row.id,
+      imei: row.imei1 || row.imei || row.imei2 || '',
+      imei2: row.imei2 || '',
+      serial_number: row.serial_number || '',
+      model: row.model || 'Unknown handset',
+      brand: row.brand || 'Unknown',
+      erp_status: (row.erp_status || row.current_status || 'unsold').toLowerCase(),
+      activation_status: (row.activation_status || 'inactive').toLowerCase(),
+      branch: row.branch_id || row.branch || 'branch_alpha',
+      sim_changes: Number(row.sim_changes || 0),
+      last_sim_change: Number(row.last_sim_change || 0),
+      erp_sync_status: row.erp_sync_status || 'synced',
+      risk_score: Number(row.risk_score || 20),
+      customer: row.customer || '',
+      warranty: row.warranty || '',
+      customer_owned: Boolean(row.customer_owned),
+      timestamp: row.updated_at || row.created_at || new Date().toISOString(),
+    };
+  }
+
+  mapCustomer(row = {}) {
+    return {
+      id: row.id,
+      name: row.full_name || row.name || 'Customer',
+      email: row.email || '',
+      phone: row.phone || '',
+      devices: row.devices || [],
+      protection_status: row.status || row.protection_status || 'active',
+      theft_reports: Number(row.theft_reports || 0),
+      recovery_progress: Number(row.recovery_progress || 0),
+    };
+  }
+
+  mapFraudAlert(row = {}) {
+    return {
+      id: row.id,
+      type: row.alert_type || row.type || 'anomaly',
+      severity: row.severity || 'medium',
+      device_id: row.device_id || '',
+      description: row.description || row.evidence?.description || row.alert_type || 'Security anomaly detected',
+      branch: row.branch || row.evidence?.branch || 'security queue',
+      devices_affected: Number(row.devices_affected || row.evidence?.devices_affected || 1),
+      status: row.status || 'open',
+      created_at: row.created_at || new Date().toISOString(),
+      assigned_to: row.assigned_to || '',
+      notes: row.notes || '',
+    };
+  }
+
+  mapTrackingLog(row = {}) {
+    return {
+      id: row.id,
+      device_id: row.device_id,
+      latitude: Number(row.latitude),
+      longitude: Number(row.longitude),
+      accuracy: Number(row.accuracy || 0),
+      network_type: row.network_type || 'unknown',
+      sim_serial_hash: row.sim_serial_hash || '',
+      carrier: row.carrier || '',
+      battery: Number(row.battery || 0),
+      event_time: row.event_time || row.created_at || new Date().toISOString(),
+    };
+  }
+
+  mapAuditLog(row = {}) {
+    return {
+      time: row.created_at || row.time || new Date().toISOString(),
+      actor: row.actor || 'System',
+      action: row.action || 'Recorded event',
+      target: row.target || '',
+      result: row.result || 'Recorded',
+    };
   }
 
   save() {
@@ -186,6 +373,7 @@ class DataManager {
       fraud_alerts: this.data.fraud_alerts.map(alert => ({ ...alert, created_at: this.toIso(alert.created_at) })),
       investigations: this.data.investigations.map(item => ({ ...item, updated_at: this.toIso(item.updated_at) })),
       audit_logs: this.data.audit_logs.map(log => ({ ...log, time: this.toIso(log.time) })),
+      tracking_logs: (this.data.tracking_logs || []).map(log => ({ ...log, event_time: this.toIso(log.event_time) })),
     };
   }
 
@@ -194,6 +382,7 @@ class DataManager {
     this.data.fraud_alerts = this.data.fraud_alerts.map(alert => ({ ...alert, created_at: new Date(alert.created_at) }));
     this.data.investigations = this.data.investigations.map(item => ({ ...item, updated_at: new Date(item.updated_at) }));
     this.data.audit_logs = this.data.audit_logs.map(log => ({ ...log, time: new Date(log.time) }));
+    this.data.tracking_logs = (this.data.tracking_logs || []).map(log => ({ ...log, event_time: new Date(log.event_time) }));
   }
 
   toIso(value) {
@@ -201,13 +390,24 @@ class DataManager {
   }
 
   addAudit(action, target, result = 'Recorded', actor = 'Current admin') {
-    this.data.audit_logs.unshift({
+    const entry = {
       time: new Date(),
       actor,
       action,
       target,
       result,
-    });
+    };
+    this.data.audit_logs.unshift(entry);
+    if (this.usingRemote) {
+      window.SecguardSupabase.client.from('audit_logs').insert([{
+        actor,
+        action,
+        target,
+        metadata: { result },
+      }]).then(({ error }) => {
+        if (error) console.warn('Audit log remote write failed.', error);
+      });
+    }
     this.save();
   }
 
@@ -253,6 +453,11 @@ class DataManager {
     };
   }
 
+  getTrackingLogs(deviceId) {
+    const logs = [...(this.data.tracking_logs || [])];
+    return deviceId ? logs.filter(log => log.device_id === deviceId) : logs;
+  }
+
   getCustomers() {
     return [...this.data.customers];
   }
@@ -265,8 +470,16 @@ class DataManager {
     const index = this.data.devices.findIndex(device => device.id === deviceId);
     if (index < 0) return { success: false, error: 'Device not found' };
     this.data.devices[index] = { ...this.data.devices[index], ...updates, timestamp: updates.timestamp || new Date() };
+    if (this.usingRemote) {
+      const payload = {
+        activation_status: this.data.devices[index].activation_status,
+        erp_status: this.data.devices[index].erp_status,
+        risk_score: this.data.devices[index].risk_score,
+      };
+      await window.SecguardSupabase.client.from('devices').update(payload).eq('id', deviceId);
+    }
     this.addAudit('Updated device telemetry', this.data.devices[index].imei);
-    this.evaluateDeviceRules(this.data.devices[index]);
+    await this.evaluateDeviceRules(this.data.devices[index]);
     this.save();
     return { success: true, device: this.data.devices[index] };
   }
@@ -289,17 +502,36 @@ class DataManager {
       ...deviceData,
     };
     this.data.devices.unshift(newDevice);
+    if (this.usingRemote) {
+      const { data, error } = await window.SecguardSupabase.client
+        .from('devices')
+        .insert([{
+          imei1: newDevice.imei,
+          imei2: newDevice.imei2 || null,
+          serial_number: newDevice.serial_number || null,
+          brand: newDevice.brand,
+          model: newDevice.model,
+          current_status: newDevice.erp_status,
+          erp_status: newDevice.erp_status,
+          activation_status: newDevice.activation_status,
+          risk_score: newDevice.risk_score,
+        }])
+        .select()
+        .single();
+      if (error) throw error;
+      if (data?.id) newDevice.id = data.id;
+    }
     this.addAudit('Registered tracked device', newDevice.imei);
-    this.evaluateDeviceRules(newDevice);
+    await this.evaluateDeviceRules(newDevice);
     this.save();
     return { success: true, device: newDevice };
   }
 
-  evaluateDeviceRules(device) {
+  async evaluateDeviceRules(device) {
     const isUnsoldActive = device.activation_status === 'active' && device.erp_status === 'unsold';
     const hasExistingAlert = this.data.fraud_alerts.some(alert => alert.device_id === device.id && alert.status === 'open');
     if (!isUnsoldActive || hasExistingAlert) return;
-    this.data.fraud_alerts.unshift({
+    const alert = {
       id: `alert_${Date.now()}`,
       type: 'unsold-active',
       severity: 'critical',
@@ -309,8 +541,9 @@ class DataManager {
       devices_affected: 1,
       status: 'open',
       created_at: new Date(),
-    });
-    this.data.investigations.unshift({
+    };
+    this.data.fraud_alerts.unshift(alert);
+    const investigation = {
       id: `inv_${Date.now()}`,
       case_number: `FT-${Math.floor(300 + Math.random() * 700)}`,
       device_id: device.id,
@@ -318,7 +551,71 @@ class DataManager {
       status: 'assigned',
       analyst: 'Security queue',
       updated_at: new Date(),
+    };
+    this.data.investigations.unshift(investigation);
+    if (this.usingRemote) {
+      await window.SecguardSupabase.client.from('fraud_alerts').insert([{
+        device_id: device.id,
+        alert_type: alert.type,
+        severity: alert.severity,
+        status: alert.status,
+        evidence: {
+          description: alert.description,
+          branch: alert.branch,
+          devices_affected: alert.devices_affected,
+        },
+      }]);
+    }
+  }
+
+  async assignFraudAlert(alertId, analyst = 'Current officer') {
+    const alert = this.data.fraud_alerts.find(item => item.id === alertId);
+    if (!alert) return false;
+    alert.status = 'assigned';
+    alert.assigned_to = analyst;
+    this.data.investigations.unshift({
+      id: `inv_${Date.now()}`,
+      case_number: `FT-${Math.floor(300 + Math.random() * 700)}`,
+      device_id: alert.device_id,
+      type: alert.type,
+      status: 'assigned',
+      analyst,
+      updated_at: new Date(),
     });
+    if (this.usingRemote) {
+      await window.SecguardSupabase.client.from('fraud_alerts').update({ status: 'assigned' }).eq('id', alertId);
+    }
+    this.addAudit('Assigned fraud alert', alertId, 'Assigned', analyst);
+    this.save();
+    return true;
+  }
+
+  async escalateFraudAlert(alertId) {
+    const order = ['low', 'medium', 'high', 'critical'];
+    const alert = this.data.fraud_alerts.find(item => item.id === alertId);
+    if (!alert) return false;
+    const next = order[Math.min(order.indexOf(alert.severity) + 1, order.length - 1)] || 'high';
+    alert.severity = next;
+    alert.status = 'escalated';
+    if (this.usingRemote) {
+      await window.SecguardSupabase.client.from('fraud_alerts').update({ severity: next, status: 'escalated' }).eq('id', alertId);
+    }
+    this.addAudit('Escalated fraud alert', alertId, next);
+    this.save();
+    return true;
+  }
+
+  async dismissFraudAlert(alertId, reason = 'Reviewed as false positive') {
+    const alert = this.data.fraud_alerts.find(item => item.id === alertId);
+    if (!alert) return false;
+    alert.status = 'dismissed';
+    alert.dismiss_reason = reason;
+    if (this.usingRemote) {
+      await window.SecguardSupabase.client.from('fraud_alerts').update({ status: 'dismissed', evidence: { dismiss_reason: reason } }).eq('id', alertId);
+    }
+    this.addAudit('Dismissed fraud alert', alertId, reason);
+    this.save();
+    return true;
   }
 
   resolveOpenAlerts() {
@@ -333,7 +630,7 @@ class DataManager {
     return resolved;
   }
 
-  createCustomerCase(input = {}) {
+  async createCustomerCase(input = {}) {
     const caseId = `device_${Date.now()}`;
     const customerName = input.customerName || `Walk-in Customer ${this.data.customers.length + 1}`;
     const device = {
@@ -375,8 +672,97 @@ class DataManager {
       updated_at: new Date(),
     });
     this.addAudit('Created customer protection case', customerName);
+    if (this.usingRemote) {
+      try {
+        const { data: remoteDevice } = await window.SecguardSupabase.client.from('devices').insert([{
+          imei1: device.imei,
+          brand: device.brand,
+          model: device.model,
+          current_status: device.erp_status,
+          erp_status: device.erp_status,
+          activation_status: device.activation_status,
+          risk_score: device.risk_score,
+        }]).select().single();
+        if (remoteDevice?.id) {
+          device.id = remoteDevice.id;
+          customer.devices = [remoteDevice.id];
+        }
+
+        const { data: remoteCustomer, error: customerError } = await window.SecguardSupabase.client.from('customers').insert([{
+          full_name: customer.name,
+          phone: customer.phone,
+          email: customer.email,
+          status: customer.protection_status,
+        }]).select().single();
+        if (customerError) console.warn('Customer remote write failed.', customerError);
+
+        const { data: report, error: reportError } = await window.SecguardSupabase.client.from('theft_reports').insert([{
+          customer_id: remoteCustomer?.id || null,
+          device_id: remoteDevice?.id || null,
+          customer: customer.name,
+          imei: device.imei,
+          priority: input.reportType === 'stolen' ? 'high' : 'medium',
+          status: input.reportType === 'stolen' ? 'open' : 'review',
+        }]).select().single();
+        if (reportError) console.warn('Theft report remote write failed.', reportError);
+        await window.SecguardSupabase.client.from('recovery_cases').insert([{
+          theft_report_id: report?.id || null,
+          caseNo: `RC-${Math.floor(1000 + Math.random() * 9000)}`,
+          device: device.model,
+          officer: 'Recovery queue',
+          progress: customer.recovery_progress,
+          status: 'monitoring',
+        }]);
+      } catch (error) {
+        console.warn('Customer protection remote workflow failed. Local workflow is still saved.', error);
+      }
+    }
     this.save();
     return { customer, device };
+  }
+
+  async ingestTelemetry(input = {}) {
+    const device = this.getDevice(input.device_id) || this.data.devices.find(item => item.imei === input.imei);
+    if (!device) return { success: false, error: 'Device not found' };
+    const log = {
+      id: `track_${Date.now()}`,
+      device_id: device.id,
+      latitude: Number(input.latitude),
+      longitude: Number(input.longitude),
+      accuracy: Number(input.accuracy || 0),
+      network_type: input.network_type || 'unknown',
+      sim_serial_hash: input.sim_serial_hash || '',
+      carrier: input.carrier || '',
+      battery: Number(input.battery || 0),
+      event_time: new Date(),
+    };
+    this.data.tracking_logs.unshift(log);
+    await this.updateDevice(device.id, {
+      activation_status: 'active',
+      timestamp: new Date(),
+      risk_score: input.risk_score || device.risk_score,
+    });
+    if (this.usingRemote) {
+      await window.SecguardSupabase.client.from('tracking_logs').insert([{
+        device_id: device.id,
+        latitude: log.latitude,
+        longitude: log.longitude,
+        accuracy: log.accuracy,
+        network_type: log.network_type,
+        sim_serial_hash: log.sim_serial_hash,
+        carrier: log.carrier,
+        battery: log.battery,
+        event_time: log.event_time.toISOString(),
+      }]);
+    }
+    this.addAudit('Ingested device telemetry', device.imei);
+    this.save();
+    return { success: true, log };
+  }
+
+  findDeviceByImei(imei) {
+    const normalized = String(imei || '').replace(/\s/g, '');
+    return this.data.devices.find(device => String(device.imei || '').replace(/\s/g, '') === normalized);
   }
 
   exportSnapshot() {
@@ -391,6 +777,15 @@ class DataManager {
   saveSettings(settings) {
     this.data.settings = { ...this.getSettings(), ...settings };
     this.addAudit('Saved platform configuration', 'Settings');
+    if (this.usingRemote) {
+      const companyId = /^[0-9a-f-]{36}$/i.test(this.data.organization?.id || '') ? this.data.organization.id : null;
+      window.SecguardSupabase.client.from('company_settings').upsert([{
+        company_id: companyId,
+        settings: this.data.settings,
+      }]).then(({ error }) => {
+        if (error) console.warn('Remote settings save failed.', error);
+      });
+    }
     this.save();
     return this.getSettings();
   }

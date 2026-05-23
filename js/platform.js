@@ -94,6 +94,9 @@ function renderAllPages() {
   renderAuditLogs();
   renderAnalyticsPage();
   renderTrackingPage();
+  renderDeviceDetailPage();
+  renderReportsPage();
+  renderNotifications();
 }
 
 async function simulateLiveTelemetry() {
@@ -268,7 +271,7 @@ function renderDeviceIntelligence() {
   const table = document.querySelector('table tbody');
   if (table) {
     table.innerHTML = dataManager.getDevices().map(device => `
-      <tr>
+      <tr data-device-row="${device.id}">
         <td>${dataManager.formatIMEI(device.imei)}</td>
         <td>${device.model}</td>
         <td>${device.activation_status}</td>
@@ -277,6 +280,11 @@ function renderDeviceIntelligence() {
         <td><span class="badge ${dataManager.getRiskLevel(device.risk_score)}">${dataManager.getRiskLevel(device.risk_score)}</span></td>
       </tr>
     `).join('');
+    table.querySelectorAll('[data-device-row]').forEach(row => {
+      row.addEventListener('click', () => {
+        window.location.href = `device-detail.html?id=${encodeURIComponent(row.dataset.deviceRow)}`;
+      });
+    });
   }
 
   const activityList = document.querySelector('.activity-list');
@@ -338,6 +346,11 @@ function renderFraudDetection() {
         <div>
           <strong>${alert.description}</strong>
           <p>${alert.branch} &bull; ${alert.devices_affected} device${alert.devices_affected !== 1 ? 's' : ''} matched &bull; escalated</p>
+          <div class="inline-actions">
+            <button class="btn btn-ghost" type="button" data-alert-action="assign" data-alert-id="${alert.id}">Assign to me</button>
+            <button class="btn btn-ghost" type="button" data-alert-action="escalate" data-alert-id="${alert.id}">Escalate</button>
+            <button class="btn btn-ghost" type="button" data-alert-action="dismiss" data-alert-id="${alert.id}">Dismiss</button>
+          </div>
         </div>
         <span class="badge ${alert.severity}">${alert.severity}</span>
       </div>
@@ -360,12 +373,25 @@ function renderFraudDetection() {
 
   const activityList = document.querySelector('.activity-list');
   if (activityList) {
-    activityList.innerHTML = dataManager.data.investigations.map(item => `
-      <div class="activity-item">
-        <div><strong>Case #${item.case_number} - ${item.type}</strong></div>
-        <span>Analyst: ${item.analyst} &bull; ${item.status} &bull; ${dataManager.formatDate(item.updated_at)}</span>
+    const columns = ['open', 'assigned', 'pending-review', 'ready-for-closure'];
+    activityList.innerHTML = `
+      <div class="kanban-board">
+        ${columns.map(status => `
+          <div class="kanban-column">
+            <strong>${status.replace(/-/g, ' ')}</strong>
+            ${dataManager.data.investigations
+              .filter(item => item.status === status || (status === 'open' && !columns.includes(item.status)))
+              .map(item => `
+                <div class="kanban-card">
+                  <small>${item.case_number}</small>
+                  <span>${item.type}</span>
+                  <em>${item.analyst} &bull; ${dataManager.formatDate(item.updated_at)}</em>
+                </div>
+              `).join('') || '<p>No cases</p>'}
+          </div>
+        `).join('')}
       </div>
-    `).join('');
+    `;
   }
 }
 
@@ -477,21 +503,29 @@ function renderAuditLogs() {
     result: 'Recorded',
   }));
   const logs = [...localLogs, ...dataManager.data.audit_logs];
+  const textFilter = (document.getElementById('audit-actor-filter')?.value || '').toLowerCase();
+  const dateFilter = document.getElementById('audit-date-filter')?.value || '';
+  const filteredLogs = logs.filter(log => {
+    const time = log.time instanceof Date ? log.time : new Date(log.time);
+    const matchesText = !textFilter || [log.actor, log.action, log.target, log.result].join(' ').toLowerCase().includes(textFilter);
+    const matchesDate = !dateFilter || time.toISOString().slice(0, 10) === dateFilter;
+    return matchesText && matchesDate;
+  });
   const auditTable = document.querySelector('table tbody');
   
   if (auditTable) {
-    auditTable.innerHTML = logs.map(log => `
+    auditTable.innerHTML = filteredLogs.map(log => `
       <tr>
         <td>${(() => {
           const time = log.time instanceof Date ? log.time : new Date(log.time);
-          return `${time.toLocaleTimeString().slice(0, 5)} &bull; ${time.toLocaleDateString()}`;
+          return Number.isNaN(time.getTime()) ? 'Unknown time' : `${time.toLocaleTimeString().slice(0, 5)} &bull; ${time.toLocaleDateString()}`;
         })()}</td>
         <td>${log.actor}</td>
         <td>${log.action}</td>
         <td>${log.target}</td>
         <td><span class="badge low">${log.result}</span></td>
       </tr>
-    `).join('');
+    `).join('') || '<tr><td colspan="5">No audit logs match this filter.</td></tr>';
   }
 }
 
@@ -599,10 +633,33 @@ function initCharts() {
   }
 }
 
+function renderNotifications() {
+  const list = document.querySelector('[data-notifications-list]');
+  const count = document.querySelector('[data-notification-count]');
+  const alerts = dataManager?.getFraudAlerts?.({ status: 'open' }) || [];
+  if (count) count.textContent = alerts.length;
+  if (list) {
+    list.innerHTML = alerts.length ? alerts.slice(0, 8).map(alert => `
+      <div class="activity-item">
+        <strong>${alert.description}</strong>
+        <span>${alert.severity} &bull; ${alert.branch} &bull; ${dataManager.formatDate(alert.created_at)}</span>
+      </div>
+    `).join('') : '<div class="activity-item"><strong>No unread alerts</strong><span>Critical notifications will appear here in real time.</span></div>';
+  }
+}
+
 function initNotifications() {
   const items = document.querySelectorAll('.alert-item');
   items.forEach((item, index) => {
     item.style.animation = `fadeUp 0.48s ease ${(index * 0.05)}s both`;
+  });
+  const panel = document.querySelector('[data-notifications-panel]');
+  renderNotifications();
+  document.querySelectorAll('[data-notifications-toggle]').forEach(button => {
+    button.addEventListener('click', () => panel?.classList.toggle('open'));
+  });
+  document.querySelector('[data-logout]')?.addEventListener('click', () => {
+    window.SecguardSupabase?.logout?.();
   });
 }
 
@@ -611,12 +668,14 @@ function initLoginForm() {
   if (!form) return;
   let selectedRole = window.SecguardAuth?.getRole() || 'company_admin';
 
-  function enterRole(role) {
+  function enterRole(role, demo = false) {
     if (window.SecguardAuth) SecguardAuth.setRole(role);
-    try {
-      localStorage.setItem('secguard_demo_session', 'true');
-    } catch (error) {
-      console.warn('Could not persist demo session flag.', error);
+    if (demo) {
+      try {
+        localStorage.setItem('secguard_demo_session', 'true');
+      } catch (error) {
+        console.warn('Could not persist demo session flag.', error);
+      }
     }
     const route = window.SecguardSupabase?.routeForRole(role) || window.SecguardAuth?.routeForRole(role) || 'dashboard.html';
     window.location.href = route;
@@ -645,9 +704,10 @@ function initLoginForm() {
     if (window.SecguardSupabase) {
       window.SecguardSupabase.login(email, password, selectedRole).then(({ error, local }) => {
         if (error && !local) {
-          console.warn('Supabase login failed. Entering local demo portal for testing.', error);
+          alert(error.message || 'Login failed. Use Demo access only when testing without a Supabase user.');
+          return;
         }
-        enterRole(selectedRole);
+        enterRole(selectedRole, local);
       });
       return;
     }
@@ -656,7 +716,7 @@ function initLoginForm() {
 
   const demoButton = document.querySelector('[data-demo-login]');
   if (demoButton) {
-    demoButton.addEventListener('click', () => enterRole(selectedRole));
+    demoButton.addEventListener('click', () => enterRole(selectedRole, true));
   }
 
   const signupButton = document.querySelector('[data-signup]');
@@ -682,6 +742,19 @@ function initLoginForm() {
     });
   }
 
+  const resetButton = document.querySelector('[data-password-reset]');
+  if (resetButton) {
+    resetButton.addEventListener('click', async () => {
+      const email = form.querySelector('input[type="email"]').value;
+      if (!email) {
+        alert('Enter your email first.');
+        return;
+      }
+      const { error } = await window.SecguardSupabase.resetPassword(email);
+      alert(error ? (error.message || 'Reset request failed.') : 'Password reset email sent.');
+    });
+  }
+
   const googleButton = document.querySelector('[data-google-login]');
   if (googleButton) {
     googleButton.addEventListener('click', () => {
@@ -697,6 +770,21 @@ function initLoginForm() {
 function initDeviceForm() {
   if (currentPage !== 'device-intelligence') return;
   const deviceForm = document.getElementById('device-input-form');
+  const lookupForm = document.getElementById('imei-lookup-form');
+  if (lookupForm) {
+    lookupForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = document.getElementById('imei-lookup-input')?.value || '';
+      const result = document.getElementById('imei-lookup-result');
+      const device = dataManager.findDeviceByImei(value);
+      if (!result) return;
+      if (!device) {
+        result.textContent = 'No matching device found. Register it or send it for admin review.';
+        return;
+      }
+      result.innerHTML = `Found ${device.model} &bull; ERP ${device.erp_status} &bull; ${dataManager.getRiskLevel(device.risk_score)} risk &bull; <a href="device-detail.html?id=${encodeURIComponent(device.id)}">Open dossier</a>`;
+    });
+  }
   const reviewButton = document.querySelector('.page-header .btn');
   if (reviewButton) {
     reviewButton.addEventListener('click', () => {
@@ -720,6 +808,10 @@ function initDeviceForm() {
 
     if (!imei || !model || !status) {
       alert('Please complete all required fields.');
+      return;
+    }
+    if (!/^\d{14,17}$/.test(imei.replace(/\s/g, ''))) {
+      alert('IMEI must be 14 to 17 digits.');
       return;
     }
 
@@ -755,10 +847,10 @@ function initCustomerActions() {
   const createButton = document.querySelector('.page-header .btn');
   const caseForm = document.getElementById('customer-case-form');
   if (caseForm) {
-    caseForm.addEventListener('submit', event => {
+    caseForm.addEventListener('submit', async event => {
       event.preventDefault();
       const formData = new FormData(caseForm);
-      dataManager.createCustomerCase({
+      await dataManager.createCustomerCase({
         customerName: formData.get('customerName'),
         phone: formData.get('phone'),
         imei: formData.get('imei'),
@@ -816,6 +908,11 @@ function initTableSearch() {
 }
 
 function getDeviceCoordinates(device, index) {
+  const latestLog = dataManager.getTrackingLogs(device.id)
+    .sort((a, b) => new Date(b.event_time) - new Date(a.event_time))[0];
+  if (latestLog && Number.isFinite(latestLog.latitude) && Number.isFinite(latestLog.longitude)) {
+    return [latestLog.latitude, latestLog.longitude];
+  }
   const base = [
     [-1.286389, 36.817223],
     [-1.265, 36.804],
@@ -1021,6 +1118,22 @@ function initDashboardActions() {
 
 function initFraudActions() {
   if (currentPage !== 'fraud') return;
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-alert-action]');
+    if (!button) return;
+    const action = button.dataset.alertAction;
+    const alertId = button.dataset.alertId;
+    if (action === 'assign') await dataManager.assignFraudAlert(alertId, 'Current officer');
+    if (action === 'escalate') await dataManager.escalateFraudAlert(alertId);
+    if (action === 'dismiss') {
+      const reason = prompt('Dismiss reason', 'Reviewed as false positive');
+      if (!reason) return;
+      await dataManager.dismissFraudAlert(alertId, reason);
+    }
+    showToast(`Fraud alert ${action} completed.`);
+    renderAllPages();
+  }, { once: false });
+
   const incidentButton = document.querySelector('.page-header .btn');
   if (!incidentButton) return;
   incidentButton.addEventListener('click', () => {
@@ -1129,8 +1242,157 @@ function initAnalyticsActions() {
   });
 }
 
+function renderDeviceDetailPage() {
+  if (currentPage !== 'device-detail') return;
+  const params = new URLSearchParams(location.search);
+  const device = dataManager.getDevice(params.get('id')) || dataManager.getDevices()[0];
+  const container = document.getElementById('device-detail-content');
+  if (!container) return;
+  if (!device) {
+    container.innerHTML = '<article class="card empty-state"><strong>No device selected</strong><p>Open Device Intelligence and select a device row to inspect it.</p></article>';
+    return;
+  }
+  const alerts = dataManager.getFraudAlerts().filter(alert => alert.device_id === device.id);
+  const logs = dataManager.getTrackingLogs(device.id).sort((a, b) => new Date(b.event_time) - new Date(a.event_time));
+  const customer = dataManager.getCustomers().find(item => (item.devices || []).includes(device.id) || item.name === device.customer);
+  container.innerHTML = `
+    <div class="card-grid kpi-grid">
+      <article class="card kpi-card"><small>Status</small><div class="value">${device.activation_status}</div><p>ERP status: ${device.erp_status}</p></article>
+      <article class="card kpi-card"><small>Risk score</small><div class="value">${device.risk_score}</div><p>${dataManager.getRiskLevel(device.risk_score)} security posture.</p></article>
+      <article class="card kpi-card"><small>SIM changes</small><div class="value">${device.sim_changes || 0}</div><p>Last change: ${device.last_sim_change ? device.last_sim_change + 'm ago' : 'none'}</p></article>
+      <article class="card kpi-card"><small>Alerts</small><div class="value">${alerts.length}</div><p>Linked fraud records.</p></article>
+    </div>
+    <div class="card-grid large-grid" style="margin-top:22px;">
+      <article class="card">
+        <div class="top-bar"><div><small>Device profile</small><strong>${device.brand} ${device.model}</strong></div><span class="badge ${dataManager.getRiskLevel(device.risk_score)}">${dataManager.getRiskLevel(device.risk_score)}</span></div>
+        <div class="detail-grid">
+          <span>IMEI</span><strong>${dataManager.formatIMEI(device.imei)}</strong>
+          <span>IMEI 2</span><strong>${device.imei2 || 'Not recorded'}</strong>
+          <span>Serial</span><strong>${device.serial_number || 'Not recorded'}</strong>
+          <span>Branch</span><strong>${device.branch}</strong>
+          <span>Owner</span><strong>${customer?.name || device.customer || 'Unassigned'}</strong>
+          <span>Warranty</span><strong>${device.warranty || 'Review'}</strong>
+        </div>
+        <div class="inline-actions" style="margin-top:16px;">
+          <button class="btn btn-ghost" type="button" data-device-action="missing" data-device-id="${device.id}">Mark missing</button>
+          <button class="btn btn-ghost" type="button" data-device-action="investigate" data-device-id="${device.id}">Flag investigation</button>
+          <button class="btn btn-ghost" type="button" data-device-action="blacklist" data-device-id="${device.id}">Blacklist</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top-bar"><div><small>Location and SIM timeline</small><strong>Telemetry history</strong></div></div>
+        <div class="activity-list">
+          ${logs.length ? logs.slice(0, 6).map(log => `
+            <div class="activity-item"><strong>${log.network_type} telemetry ping</strong><span>${new Date(log.event_time).toLocaleString()} &bull; ${log.latitude}, ${log.longitude} &bull; ${log.carrier || 'unknown carrier'}</span></div>
+          `).join('') : '<div class="activity-item"><strong>No telemetry yet</strong><span>Telemetry appears when the mobile client or API sends location data.</span></div>'}
+        </div>
+      </article>
+    </div>
+    <article class="card" style="margin-top:22px;">
+      <div class="top-bar"><div><small>Fraud links</small><strong>Alerts for this device</strong></div></div>
+      <div class="alert-list">
+        ${alerts.length ? alerts.map(alert => `<div class="alert-item"><div><strong>${alert.description}</strong><p>${alert.status} &bull; ${dataManager.formatDate(alert.created_at)}</p></div><span class="badge ${alert.severity}">${alert.severity}</span></div>`).join('') : '<div class="activity-item"><strong>No linked alerts</strong><span>This device has no current fraud records.</span></div>'}
+      </div>
+    </article>
+  `;
+}
+
+function initDeviceDetailActions() {
+  if (currentPage !== 'device-detail') return;
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-device-action]');
+    if (!button) return;
+    const action = button.dataset.deviceAction;
+    const id = button.dataset.deviceId;
+    if (action === 'blacklist' && !confirm('Blacklist this device?')) return;
+    if (action === 'missing' && !confirm('Mark this device as missing?')) return;
+    const updates = action === 'blacklist'
+      ? { erp_status: 'blacklisted', risk_score: 95 }
+      : action === 'missing'
+      ? { erp_status: 'missing', risk_score: 88 }
+      : { risk_score: 82 };
+    await dataManager.updateDevice(id, updates);
+    dataManager.addAudit(`Device action: ${action}`, id);
+    showToast(`Device ${action} action recorded.`);
+    renderDeviceDetailPage();
+  });
+}
+
+function makeCsv(rows) {
+  if (!rows.length) return '';
+  const headers = Object.keys(rows[0]);
+  const escape = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
+  return [headers.join(','), ...rows.map(row => headers.map(header => escape(row[header])).join(','))].join('\n');
+}
+
+function downloadText(filename, content, type = 'text/csv') {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function renderReportsPage() {
+  if (currentPage !== 'reports') return;
+  const table = document.getElementById('reports-table-body');
+  if (!table) return;
+  const rows = [
+    { report: 'Fraud Summary', records: dataManager.getFraudAlerts().length, status: 'Ready' },
+    { report: 'Device Inventory', records: dataManager.getDevices().length, status: 'Ready' },
+    { report: 'Recovery Status', records: dataManager.data.investigations.length, status: 'Ready' },
+    { report: 'Branch Performance', records: dataManager.getBranches().length, status: 'Ready' },
+    { report: 'Staff Activity', records: dataManager.getStaff().length, status: 'Ready' },
+  ];
+  table.innerHTML = rows.map(row => `<tr><td>${row.report}</td><td>${row.records}</td><td><span class="badge low">${row.status}</span></td><td><button class="btn btn-ghost" data-report-export="${row.report}">Export CSV</button></td></tr>`).join('');
+}
+
+function initReportsActions() {
+  if (currentPage !== 'reports') return;
+  document.addEventListener('click', event => {
+    const button = event.target.closest('[data-report-export]');
+    if (!button) return;
+    const report = button.dataset.reportExport;
+    const rows = report === 'Fraud Summary'
+      ? dataManager.getFraudAlerts()
+      : report === 'Device Inventory'
+      ? dataManager.getDevices()
+      : report === 'Recovery Status'
+      ? dataManager.data.investigations
+      : report === 'Branch Performance'
+      ? dataManager.getBranches()
+      : dataManager.getStaff();
+    downloadText(`secguard-${report.toLowerCase().replace(/\s+/g, '-')}.csv`, makeCsv(rows));
+    dataManager.addAudit('Exported CSV report', report);
+  });
+}
+
+function initAuditActions() {
+  if (currentPage !== 'audit-logs') return;
+  ['audit-actor-filter', 'audit-date-filter'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', renderAuditLogs);
+  });
+  const exportButton = document.querySelector('.page-header .btn');
+  exportButton?.addEventListener('click', () => {
+    const rows = dataManager.data.audit_logs.map(log => ({
+      time: dataManager.toIso(log.time),
+      actor: log.actor,
+      action: log.action,
+      target: log.target,
+      result: log.result,
+    }));
+    downloadText(`secguard-audit-logs-${Date.now()}.csv`, makeCsv(rows));
+    dataManager.addAudit('Exported audit logs', 'Audit CSV');
+    showToast('Audit CSV downloaded.');
+  });
+}
+
 async function initPage() {
   try {
+    await window.SecguardAuth?.initSession?.();
+    if (typeof renderPlatformNav === 'function') await renderPlatformNav();
     initSidebarToggle();
     initLoginForm();
 
@@ -1151,6 +1413,9 @@ async function initPage() {
     initCustomerActions();
     initSettingsActions();
     initAnalyticsActions();
+    initDeviceDetailActions();
+    initReportsActions();
+    initAuditActions();
     initActiveNav();
     initTableSearch();
 
@@ -1164,6 +1429,8 @@ async function initPage() {
     renderAnalyticsPage();
     renderTrackingPage();
     renderSettingsPage();
+    renderDeviceDetailPage();
+    renderReportsPage();
 
     startLiveSimulation();
   } catch (error) {
@@ -1172,3 +1439,4 @@ async function initPage() {
 }
 
 window.addEventListener('DOMContentLoaded', initPage);
+window.addEventListener('secguard:data-updated', renderAllPages);
