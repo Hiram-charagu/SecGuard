@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="data-service.js"></script>
+</head>
+<body data-page="settings">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Platform settings</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html" class="active"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Security policy active</div>
+        <div class="status-pill">Access control enabled</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>System</strong> settings</small>
+          <h2>Enterprise configuration</h2>
+          <p>Control access policies, notifications, ERP integration, and security thresholds for Secguard.</p>
+        </div>
+        <button class="btn">Save configuration</button>
+      </div>
+
+      <div class="card-grid large-grid">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>General</small>
+              <strong>Workspace settings</strong>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="workspace">Workspace name</label>
+              <input id="workspace" type="text" value="Secguard Enterprise" />
+            </div>
+            <div class="input-group">
+              <label for="timezone">Time zone</label>
+              <select id="timezone">
+                <option>UTC</option>
+                <option>GMT+1</option>
+                <option selected>GMT+3</option>
+                <option>GMT+8</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="notify">Alert notification</label>
+              <select id="notify">
+                <option selected>Email only</option>
+                <option>SMS</option>
+                <option>Push</option>
+              </select>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Security</small>
+              <strong>Access control</strong>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="mfa">Multi-factor auth</label>
+              <select id="mfa">
+                <option>Disabled</option>
+                <option selected>Enabled</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="risk">Auto lock threshold</label>
+              <select id="risk">
+                <option>Low</option>
+                <option selected>Medium</option>
+                <option>High</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="erp-link">ERP sync mode</label>
+              <select id="erp-link">
+                <option>Manual</option>
+                <option selected>Auto</option>
+              </select>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Support</small>
+            <strong>Admin notes</strong>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="admin-notes">Operational notes</label>
+          <textarea id="admin-notes">Review ERP sync discrepancies weekly and validate unauthorized activity tickets within 24 hours.</textarea>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

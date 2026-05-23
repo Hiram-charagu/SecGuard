@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="data-service.js"></script>
+</head>
+<body data-page="analytics">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Analytics</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html" class="active"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Analytics sync live</div>
+        <div class="status-pill">Data freshness 99%</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>Analytics</strong> updated every 2 minutes</small>
+          <h2>Security analytics</h2>
+          <p>Measure branch performance, fraud trends, and operational risk signals with enterprise clarity.</p>
+        </div>
+        <button class="btn">Export insights</button>
+      </div>
+
+      <div class="card-grid kpi-grid">
+        <article class="card kpi-card">
+          <div class="metric">
+            <div>
+              <small>Alert coverage</small>
+              <div class="value">82%</div>
+            </div>
+            <span class="badge low">Wide</span>
+          </div>
+          <p>Percentage of tracked devices covered by fraud intelligence.</p>
+        </article>
+
+        <article class="card kpi-card">
+          <div class="metric">
+            <div>
+              <small>Risk index</small>
+              <div class="value">68</div>
+            </div>
+            <span class="badge medium">Medium</span>
+          </div>
+          <p>Composite risk score for the current security environment.</p>
+        </article>
+
+        <article class="card kpi-card">
+          <div class="metric">
+            <div>
+              <small>Branch anomalies</small>
+              <div class="value">13</div>
+            </div>
+            <span class="badge high">Elevated</span>
+          </div>
+          <p>Branches with above-average suspicious device rates.</p>
+        </article>
+
+        <article class="card kpi-card">
+          <div class="metric">
+            <div>
+              <small>Investigation velocity</small>
+              <div class="value">1.9d</div>
+            </div>
+            <span class="badge low">Fast</span>
+          </div>
+          <p>Average time to resolve fraud investigations.</p>
+        </article>
+      </div>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Branch analytics</small>
+              <strong>Fraud alert volume</strong>
+            </div>
+          </div>
+          <div class="chart-block">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Risk exposure</small>
+              <strong>Trend line</strong>
+            </div>
+          </div>
+          <div class="chart-block">
+            <canvas id="riskChart"></canvas>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Analytics highlights</small>
+            <strong>Insight summary</strong>
+          </div>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div><strong>Branch Theta reduced ERP anomaly incidents by 22%</strong></div>
+            <span>Ongoing optimization of device intake and security validation.</span>
+          </div>
+          <div class="activity-item">
+            <div><strong>SIM changes trending upward in southern region</strong></div>
+            <span>Security analysts should review branch routing and delivery controls.</span>
+          </div>
+          <div class="activity-item">
+            <div><strong>Recovery progress accelerated 15% week-over-week</strong></div>
+            <span>Customer protection workflows are reducing case duration.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

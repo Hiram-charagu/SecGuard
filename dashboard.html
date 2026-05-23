@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="data-service.js"></script>
+</head>
+<body data-page="dashboard">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Security command center</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html" class="active"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Live sync active</div>
+        <div class="status-pill">ERP integration stable</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <p class="notification-pill"><strong>5</strong> alerts require review</p>
+          <h2>Secguard mission control</h2>
+          <p>Monitor device fraud, live tracking, branch intelligence, and security alerts from one elite dashboard.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn">Export report</button>
+          <button class="btn">Resolve alerts</button>
+        </div>
+      </div>
+
+      <div class="card-grid kpi-grid" id="kpi-grid">
+        <!-- KPI cards will be inserted here by JavaScript -->
+      </div>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Live device security</small>
+              <strong>Activity timeline</strong>
+            </div>
+            <span class="badge high">Critical alerts</span>
+          </div>
+          <div class="chart-block">
+            <canvas id="deviceActivityChart"></canvas>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Alert severity</small>
+              <strong>Fraud signal split</strong>
+            </div>
+            <span class="badge medium">Tracking focus</span>
+          </div>
+          <div class="chart-block">
+            <canvas id="fraudSplitChart"></canvas>
+          </div>
+        </article>
+      </div>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <div class="card">
+          <div class="top-bar">
+            <div>
+              <small>Branch intelligence</small>
+              <strong>Regional performance</strong>
+            </div>
+          </div>
+          <div class="device-list" id="branches-list">
+            <!-- Branch cards will be inserted here by JavaScript -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="top-bar">
+            <div>
+              <small>Recent security</small>
+              <strong>Suspicious activity</strong>
+            </div>
+          </div>
+          <div class="activity-list" id="alerts-list">
+            <!-- Alert items will be inserted here by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

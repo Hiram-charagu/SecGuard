@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Device Intelligence & Security Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="website">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Secguard home">
+      <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+      <div class="brand-title">
+        <h1>Secguard</h1>
+        <p>Device intelligence platform</p>
+      </div>
+    </a>
+    <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
+    <nav class="site-nav" aria-label="Public navigation">
+      <a href="about.html">About</a>
+      <a href="features.html">Services</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="site-actions">
+      <a class="btn btn-ghost" href="login.html">Login</a>
+      <a class="btn" href="demo-request.html">Request demo</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="site-hero">
+      <div class="hero-copy">
+        <span class="eyebrow">ERP-integrated phone security</span>
+        <h1>Device intelligence for phone retailers, security teams, and recovery operations.</h1>
+        <p>Secguard connects ERP inventory, customer protection, mobile telemetry, fraud detection, and recovery workflows into one production-ready security platform.</p>
+        <div class="hero-actions">
+          <a class="btn" href="demo-request.html">Book a platform demo</a>
+          <a class="btn btn-ghost" href="dashboard.html">View dashboard demo</a>
+        </div>
+      </div>
+      <div class="hero-console" aria-label="Platform status preview">
+        <div class="console-header">
+          <span></span><span></span><span></span>
+          <strong>Live security layer</strong>
+        </div>
+        <div class="console-grid">
+          <div>
+            <small>ERP sync</small>
+            <strong>98.9%</strong>
+          </div>
+          <div>
+            <small>Protected devices</small>
+            <strong>4,303</strong>
+          </div>
+          <div>
+            <small>Open alerts</small>
+            <strong>126</strong>
+          </div>
+          <div>
+            <small>Recovery cases</small>
+            <strong>24</strong>
+          </div>
+        </div>
+        <div class="console-flow">
+          <div><span>1</span> Device enters ERP inventory</div>
+          <div><span>2</span> Secguard creates registry profile</div>
+          <div><span>3</span> Customer enables protection app</div>
+          <div><span>4</span> Fraud and recovery alerts stream live</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-band">
+      <div class="section-heading">
+        <span class="eyebrow">What Secguard does</span>
+        <h2>It turns device sales into a protected lifecycle.</h2>
+        <p>A company receives phones, syncs them from ERP, registers each device, detects risky movement, enables customer protection, and handles theft recovery from one controlled environment.</p>
+      </div>
+    </section>
+
+    <section class="site-band">
+      <div class="section-heading">
+        <span class="eyebrow">Four core engines</span>
+        <h2>Built as a real platform, not a single tracking screen.</h2>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <small>01</small>
+          <h3>ERP Integration Engine</h3>
+          <p>Syncs inventory, sales, branches, staff, receipts, warranties, and ownership state from the existing ERP.</p>
+        </article>
+        <article class="feature-card">
+          <small>02</small>
+          <h3>Device Intelligence Engine</h3>
+          <p>Maintains device registry, lifecycle status, risk profile, telemetry history, and last-known security state.</p>
+        </article>
+        <article class="feature-card">
+          <small>03</small>
+          <h3>Fraud Detection Engine</h3>
+          <p>Flags unsold active phones, duplicate IMEIs, suspicious staff patterns, mismatched receipts, and stock anomalies.</p>
+        </article>
+        <article class="feature-card">
+          <small>04</small>
+          <h3>Customer Protection Engine</h3>
+          <p>Allows customers to enroll devices, report theft, view warranty, receive alerts, and follow recovery progress.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="split-section">
+      <div>
+        <span class="eyebrow">About us</span>
+        <h2>Designed for serious retailers that need calm, controlled security operations.</h2>
+        <p>Secguard is built to sit beside an ERP system and give organizations a dedicated command layer for phone security, branch visibility, fraud investigations, and customer recovery support.</p>
+      </div>
+      <div class="architecture-list">
+        <div><strong>Organization workspaces</strong><span>Each company has isolated users, branches, roles, policies, devices, and reports.</span></div>
+        <div><strong>Operational security</strong><span>Staff actions, device changes, sales mismatches, and recovery events are audit-ready.</span></div>
+        <div><strong>Customer trust</strong><span>Protection is opt-in, visible, and designed around recovery rather than invasive control.</span></div>
+      </div>
+    </section>
+
+    <section class="split-section">
+      <div>
+        <span class="eyebrow">Production backend</span>
+        <h2>Designed around Supabase from the beginning.</h2>
+        <p>Supabase gives the first production version a strong foundation: PostgreSQL, auth, row-level security, realtime updates, storage, APIs, and edge functions.</p>
+      </div>
+      <div class="architecture-list">
+        <div><strong>PostgreSQL</strong><span>Devices, branches, users, customers, sales, fraud cases, audit logs.</span></div>
+        <div><strong>Realtime</strong><span>Live dashboard alerts, tracking state, investigation updates.</span></div>
+        <div><strong>RLS</strong><span>Company, branch, role, and customer-level data isolation.</span></div>
+        <div><strong>Edge Functions</strong><span>ERP webhooks, telemetry ingestion, fraud rule triggers.</span></div>
+      </div>
+    </section>
+
+    <section class="site-band compact-cta">
+      <div>
+        <span class="eyebrow">Next build step</span>
+        <h2>Start with the website and web platform, then connect Supabase and mobile telemetry.</h2>
+      </div>
+      <a class="btn" href="demo-request.html">Plan implementation</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Secguard</span>
+    <span>Consent-based enterprise device security.</span>
+  </footer>
+  <script src="website.js"></script>
+</body>
+</html>

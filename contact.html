@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="website">
+  <header class="site-header">
+    <a class="brand" href="index.html"><div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div><div class="brand-title"><h1>Secguard</h1><p>Device intelligence platform</p></div></a>
+    <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
+    <nav class="site-nav" aria-label="Public navigation">
+      <a href="about.html">About</a>
+      <a href="features.html">Services</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Request demo</a></div>
+  </header>
+
+  <main class="site-page">
+    <section class="split-section">
+      <div>
+        <span class="eyebrow">Contact</span>
+        <h1>Talk through the platform design.</h1>
+        <p>Use this page for sales, partnership, support, and implementation conversations. In production, this form should send to Supabase Edge Functions or a CRM webhook.</p>
+      </div>
+      <form class="site-form">
+        <div class="input-group"><label for="name">Name</label><input id="name" type="text" required></div>
+        <div class="input-group"><label for="email">Email</label><input id="email" type="email" required></div>
+        <div class="input-group"><label for="message">Message</label><textarea id="message" required></textarea></div>
+        <button class="btn" type="submit">Send message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>Secguard</span><span>Implementation-ready contact flow.</span></footer>
+  <script src="website.js"></script>
+</body>
+</html>

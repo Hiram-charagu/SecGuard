@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Audit Logs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="data-service.js"></script>
+</head>
+<body data-page="audit-logs">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Audit logs</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html" class="active"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Audit retention configured</div>
+        <div class="status-pill">Immutable logs active</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>47</strong> recent actions</small>
+          <h2>Audit log stream</h2>
+          <p>Review system events, staff actions, and security events with transparent operational traceability.</p>
+        </div>
+        <button class="btn">Download log set</button>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Event records</small>
+            <strong>Recent audit entries</strong>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Actor</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>09:14 • 21 May</td>
+                <td>H. Patel</td>
+                <td>Reviewed fraud case</td>
+                <td>IMEI 3520 0912 0951 002</td>
+                <td><span class="badge low">Completed</span></td>
+              </tr>
+              <tr>
+                <td>08:53 • 21 May</td>
+                <td>S. Kim</td>
+                <td>Updated ERP sync rule</td>
+                <td>Inventory policy</td>
+                <td><span class="badge medium">Pending</span></td>
+              </tr>
+              <tr>
+                <td>08:20 • 21 May</td>
+                <td>System</td>
+                <td>Generated anomaly alert</td>
+                <td>Branch Delta</td>
+                <td><span class="badge high">Triggered</span></td>
+              </tr>
+              <tr>
+                <td>07:42 • 21 May</td>
+                <td>M. Ross</td>
+                <td>Confirmed recovery ticket</td>
+                <td>IMEI 3520 0912 4923 118</td>
+                <td><span class="badge low">Resolved</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

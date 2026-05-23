@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Fraud Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="data-service.js"></script>
+</head>
+<body data-page="fraud">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Fraud center</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html" class="active"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Alert pipeline healthy</div>
+        <div class="status-pill">Audit retention active</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>9</strong> active investigations</small>
+          <h2>Fraud detection center</h2>
+          <p>Rapidly identify anomaly events, suspicious devices, and investigation status across the security operation.</p>
+        </div>
+        <button class="btn">Open incident board</button>
+      </div>
+
+      <div class="card-grid kpi-grid" id="fraud-kpi-grid">
+        <!-- Fraud KPI cards will be inserted here -->
+      </div>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Top anomalies</small>
+              <strong>Alert intensity</strong>
+            </div>
+          </div>
+          <div class="alert-list">
+            <div class="alert-item">
+              <div>
+                <strong>Unexpected activation after unsold ERP status</strong>
+                <p>Branch Omega • 4 devices matched • escalated</p>
+              </div>
+              <span class="badge critical">Critical</span>
+            </div>
+            <div class="alert-item">
+              <div>
+                <strong>SIM mismatch from different region</strong>
+                <p>Detected 19 minutes ago • cross-branch risk</p>
+              </div>
+              <span class="badge high">High</span>
+            </div>
+            <div class="alert-item">
+              <div>
+                <strong>Activation from blocked network</strong>
+                <p>Branch Delta • ERP sync pending</p>
+              </div>
+              <span class="badge medium">Medium</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Investigations</small>
+              <strong>Case review status</strong>
+            </div>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div><strong>Case #FT-290 marked ready for closure</strong></div>
+              <span>Analyst: R. Coleman • 11 minutes ago</span>
+            </div>
+            <div class="activity-item">
+              <div><strong>High-risk SIM event assigned</strong></div>
+              <span>Assigned to fraud team • 37 minutes ago</span>
+            </div>
+            <div class="activity-item">
+              <div><strong>ERP integration mismatch escalated</strong></div>
+              <span>Pending device lock review • 58 minutes ago</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Risk roster</small>
+            <strong>Suspicious device table</strong>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>IMEI</th>
+                <th>Device</th>
+                <th>Risk</th>
+                <th>Investigation</th>
+                <th>Last update</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3520 0912 0951 002</td>
+                <td>Pulse Nova</td>
+                <td><span class="badge high">High</span></td>
+                <td>SIM anomaly review</td>
+                <td>6m ago</td>
+              </tr>
+              <tr>
+                <td>3520 0912 4923 118</td>
+                <td>Carbon Edge</td>
+                <td><span class="badge critical">Critical</span></td>
+                <td>ERP mismatch alert</td>
+                <td>14m ago</td>
+              </tr>
+              <tr>
+                <td>3520 0912 6674 921</td>
+                <td>Vector Prime</td>
+                <td><span class="badge medium">Medium</span></td>
+                <td>Activity pattern flagged</td>
+                <td>29m ago</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

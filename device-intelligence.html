@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Device Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="data-service.js"></script>
+</head>
+<body data-page="device-intelligence">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Device intelligence</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html" class="active"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Snapshot updated 2m ago</div>
+        <div class="status-pill">SIM health nominal</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>12</strong> devices flagged</small>
+          <h2>Device intelligence hub</h2>
+          <p>Inspect device status, IMEI insights, ERP sync state, and SIM anomaly history for high-risk handsets.</p>
+        </div>
+        <button class="btn">Review device queue</button>
+      </div>
+
+        <article class="card kpi-grid" style="grid-template-columns: 1fr;">
+          <div id="device-kpi-grid">
+            <!-- Device intelligence KPIs will be inserted here -->
+          </div>
+        </article>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Device cluster</small>
+              <strong>Live intelligence cards</strong>
+            </div>
+          </div>
+          <div class="device-list">
+            <div class="device-card">
+              <div class="status-pill"><span></span>IMEI 3520 0912 7765 042 • High risk</div>
+              <div><strong>Model: Orion X5</strong></div>
+              <p>Activation status: active • ERP status: unsold • Last SIM change: 1h ago</p>
+            </div>
+            <div class="device-card">
+              <div class="status-pill"><span></span>IMEI 3520 0912 1299 503 • Medium risk</div>
+              <div><strong>Model: Nova Prime</strong></div>
+              <p>Activation status: active • ERP status: sold • SIM change detected 12m ago</p>
+            </div>
+            <div class="device-card">
+              <div class="status-pill"><span></span>IMEI 3520 0912 6688 725 • Low risk</div>
+              <div><strong>Model: Azure Steel</strong></div>
+              <p>Activation status: pending • ERP status: reserved • ERP sync delay 8m</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Device timeline</small>
+              <strong>Selected handset history</strong>
+            </div>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div><strong>SIM swapped by unknown profile</strong></div>
+              <span>2 minutes ago • Location: Border branch</span>
+            </div>
+            <div class="activity-item">
+              <div><strong>Activation status changed to active</strong></div>
+              <span>14 minutes ago • ERP sales record remains unsold</span>
+            </div>
+            <div class="activity-item">
+              <div><strong>IMEI flagged for manual review</strong></div>
+              <span>35 minutes ago • Risk score jumped +12</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>ERP mock input</small>
+            <strong>Add a tracked device</strong>
+          </div>
+        </div>
+        <form class="form-grid" id="device-input-form">
+          <div class="input-group">
+            <label for="imei-input">IMEI</label>
+            <input id="imei-input" type="text" placeholder="352009127765042" required />
+          </div>
+          <div class="input-group">
+            <label for="model-input">Model</label>
+            <input id="model-input" type="text" placeholder="Orion X5" required />
+          </div>
+          <div class="input-group">
+            <label for="status-input">Status</label>
+            <input id="status-input" type="text" placeholder="Active" required />
+          </div>
+          <div class="input-group">
+            <label for="risk-input">Risk</label>
+            <select id="risk-input">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="input-group" style="grid-column: span 2;">
+            <button class="btn" type="submit">Add device</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Device roster</small>
+            <strong>Active intelligence table</strong>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>IMEI</th>
+                <th>Model</th>
+                <th>Status</th>
+                <th>SIM History</th>
+                <th>ERP Sync</th>
+                <th>Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3520 0912 7765 042</td>
+                <td>Orion X5</td>
+                <td>Active</td>
+                <td>1 swap</td>
+                <td>Desynced</td>
+                <td><span class="badge high">High</span></td>
+              </tr>
+              <tr>
+                <td>3520 0912 1299 503</td>
+                <td>Nova Prime</td>
+                <td>Active</td>
+                <td>2 swaps</td>
+                <td>Synced</td>
+                <td><span class="badge medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>3520 0912 6688 725</td>
+                <td>Azure Steel</td>
+                <td>Pending</td>
+                <td>0 swaps</td>
+                <td>Sync in progress</td>
+                <td><span class="badge low">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

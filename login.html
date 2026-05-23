@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="login">
+  <main class="login-shell">
+    <section class="login-panel">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Secure device intelligence for enterprise phone retailers.</p>
+        </div>
+      </div>
+
+      <h1>Access the command layer</h1>
+      <p>Login to monitor device security, fraud signals, and live tracking with premium enterprise controls.</p>
+
+      <form class="login-form">
+        <div class="input-group">
+          <label for="email">Corporate Email</label>
+          <input id="email" type="email" placeholder="security@secguard.io" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Enter your password" required />
+        </div>
+        <button class="btn">Sign in securely</button>
+      </form>
+
+      <div class="footer-note">
+        <p>Secguard is currently wired to a local demo backend. Production auth will connect through Supabase.</p>
+        <p><a href="index.html">Back to website</a></p>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Demo Request</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="website">
+  <header class="site-header">
+    <a class="brand" href="index.html"><div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div><div class="brand-title"><h1>Secguard</h1><p>Device intelligence platform</p></div></a>
+    <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
+    <nav class="site-nav" aria-label="Public navigation">
+      <a href="about.html">About</a>
+      <a href="features.html">Services</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Request demo</a></div>
+  </header>
+
+  <main class="site-page">
+    <section class="split-section">
+      <div>
+        <span class="eyebrow">Demo request</span>
+        <h1>Plan the first production rollout.</h1>
+        <p>This request captures the implementation details that matter: ERP type, branches, device volume, mobile app timeline, and security priorities.</p>
+      </div>
+      <form class="site-form">
+        <div class="input-group"><label for="company">Company</label><input id="company" type="text" required></div>
+        <div class="input-group"><label for="work-email">Work Email</label><input id="work-email" type="email" required></div>
+        <div class="input-group"><label for="device-volume">Monthly Device Volume</label><select id="device-volume" required><option value="">Select volume</option><option>Under 500</option><option>500 - 5,000</option><option>5,000 - 25,000</option><option>25,000+</option></select></div>
+        <div class="input-group"><label for="erp">ERP System</label><input id="erp" type="text" placeholder="MAPPHEX, custom ERP, Odoo, SAP, etc."></div>
+        <div class="input-group"><label for="notes">Main Goal</label><textarea id="notes" placeholder="Fraud detection, customer protection, recovery, or all components"></textarea></div>
+        <button class="btn" type="submit">Submit demo request</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>Secguard</span><span>Built for full platform rollout.</span></footer>
+  <script src="website.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Customer Protection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="data-service.js"></script>
+</head>
+<body data-page="customer">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Customer protection</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html" class="active"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Protective cover active</div>
+        <div class="status-pill">Warranty sync ready</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>18</strong> recovery requests</small>
+          <h2>Customer protection portal</h2>
+          <p>Manage protected devices, theft reports, warranty status, and recovery progress for customer cases.</p>
+        </div>
+        <button class="btn">Create new case</button>
+      </div>
+
+      <div class="card-grid kpi-grid" id="customer-kpi-grid">
+        <!-- Customer protection KPIs will be inserted here -->
+      </div>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Protected devices</small>
+              <strong>Customer device roster</strong>
+            </div>
+          </div>
+          <div class="device-list">
+            <div class="device-card">
+              <div class="status-pill"><span></span>IMEI 3520 0912 0951 002 • Theft report</div>
+              <div><strong>Model: Borealis C7</strong></div>
+              <p>Customer: A. Nguyen • Recovery progress 60% • Warranty: active</p>
+            </div>
+            <div class="device-card">
+              <div class="status-pill"><span></span>IMEI 3520 0912 4923 118 • Protected</div>
+              <div><strong>Model: Pulse Nova</strong></div>
+              <p>Customer: M. Rivera • No incidents • Warranty expires in 142 days</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Theft report</small>
+              <strong>Recovery timeline</strong>
+            </div>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div><strong>Device flagged stolen</strong></div>
+              <span>Customer notification sent • 9 minutes ago</span>
+            </div>
+            <div class="activity-item">
+              <div><strong>Signal freeze requested</strong></div>
+              <span>Lock command pending to carrier • 32 minutes ago</span>
+            </div>
+            <div class="activity-item">
+              <div><strong>Recovery route updated</strong></div>
+              <span>Branch logistics team assigned • 1h ago</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Claims</small>
+            <strong>Theft & protection requests</strong>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>IMEI</th>
+                <th>Status</th>
+                <th>Warranty</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Alicia Nguyen</td>
+                <td>3520 0912 0951 002</td>
+                <td><span class="badge high">Recovery</span></td>
+                <td>Active</td>
+                <td>60%</td>
+              </tr>
+              <tr>
+                <td>Morgan Rivera</td>
+                <td>3520 0912 4923 118</td>
+                <td><span class="badge low">Protected</span></td>
+                <td>Active</td>
+                <td>100%</td>
+              </tr>
+              <tr>
+                <td>Kei Thompson</td>
+                <td>3520 0912 6688 725</td>
+                <td><span class="badge medium">Review</span></td>
+                <td>Pending</td>
+                <td>28%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

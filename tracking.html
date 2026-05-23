@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Live Tracking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="data-service.js"></script>
+</head>
+<body data-page="tracking">
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
+        <div class="brand-title">
+          <h1>Secguard</h1>
+          <p>Live tracking</p>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a href="dashboard.html"><span>🏠</span><span>Dashboard</span></a>
+        <a href="device-intelligence.html"><span>📡</span><span>Device Intelligence</span></a>
+        <a href="fraud.html"><span>🛡️</span><span>Fraud Detection</span></a>
+        <a href="tracking.html" class="active"><span>🛰️</span><span>Live Tracking</span></a>
+        <a href="customer.html"><span>👤</span><span>Customer Protection</span></a>
+        <a href="analytics.html"><span>📊</span><span>Analytics</span></a>
+        <a href="audit-logs.html"><span>📜</span><span>Audit Logs</span></a>
+        <a href="settings.html"><span>⚙️</span><span>Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-chip">Live location feed</div>
+        <div class="status-pill">Signal quality 95%</div>
+      </div>
+    </aside>
+
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill" id="tracking-offroute-pill"><strong>0</strong> devices off-route</small>
+          <h2>Live tracking matrix</h2>
+          <p>Track device movement, last online status, and signal health for devices in field deployment.</p>
+        </div>
+        <button class="btn">Refresh feed</button>
+      </div>
+
+      <div class="card-grid large-grid">
+        <article class="card map-card">
+          <div class="map-placeholder">
+            <strong>Map placeholder</strong>
+            <p id="tracking-map-summary">Live map functionality will visualize device telemetry when connected.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Position feed</small>
+              <strong>Live device cards</strong>
+            </div>
+          </div>
+          <div class="device-list">
+            <!-- Live device cards inserted here -->
+          </div>
+        </article>
+      </div>
+
+      <div class="card-grid kpi-grid" style="margin-top: 22px;" id="tracking-kpi-grid">
+        <!-- Live tracking KPIs will be inserted here -->
+      </div>
+
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar">
+            <div>
+              <small>Route overview</small>
+              <strong>Live tracking table</strong>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Last seen</th>
+                  <th>Route status</th>
+                  <th>Signal</th>
+                  <th>ERP sync</th>
+                </tr>
+              </thead>
+              <tbody id="tracking-table-body">
+                <!-- Tracking rows inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
