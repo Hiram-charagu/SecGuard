@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Organizations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/platform.css" />
+  <script src="js/supabase-config.js"></script>
+</head>
+<body data-page="organizations" data-workspace-page="organizations">
+  <div class="page-shell">
+    <aside class="sidebar" data-platform-nav></aside>
+    <section class="main-shell">
+      <div class="page-header">
+        <div>
+          <small class="notification-pill"><strong>Workspace</strong> company control</small>
+          <h2>Organizations</h2>
+          <p>Create and manage company workspaces, subscription state, and organization-level platform access.</p>
+        </div>
+      </div>
+      <div class="card-grid kpi-grid" data-workspace-kpis></div>
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card">
+          <div class="top-bar"><div><small>Create</small><strong>Add organization</strong></div></div>
+          <form class="form-grid" data-workspace-form></form>
+        </article>
+        <article class="card">
+          <div class="top-bar"><div><small>Local mode</small><strong>Supabase readiness</strong></div></div>
+          <div class="activity-list">
+            <div class="activity-item"><strong>Supabase URL configured</strong><span>https://wognlmuaslsrmfmrlzjv.supabase.co</span></div>
+            <div class="activity-item"><strong>Anon key required</strong><span>Add it in js/supabase-config.js to enable live backend mode.</span></div>
+          </div>
+        </article>
+      </div>
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar"><div><small>Records</small><strong>Organization table</strong></div></div>
+        <div class="table-wrapper"><table data-workspace-table></table></div>
+      </div>
+    </section>
+  </div>
+  <script src="js/platform-nav.js"></script>
+  <script src="js/workspace.js"></script>
+</body>
+</html>

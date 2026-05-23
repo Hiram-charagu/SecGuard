@@ -8,6 +8,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow-y: auto;
   padding: 24px 18px;
   background: rgba(7, 11, 21, 0.96);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
@@ -196,6 +197,12 @@ nav a span {
 .kpi-card .metric .value {
   font-size: 2rem;
   line-height: 1;
+}
+
+.kpi-card > .value {
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
 }
 
 .kpi-card .metric .trend {

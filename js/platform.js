@@ -346,7 +346,15 @@ function renderCustomerPortal() {
 function renderAuditLogs() {
   if (currentPage !== 'audit-logs') return;
   
-  const logs = dataManager.data.audit_logs;
+  const localWorkspace = JSON.parse(localStorage.getItem('secguard_workspace_v1') || '{"auditLogs":[]}');
+  const localLogs = (localWorkspace.auditLogs || []).map(log => ({
+    time: new Date(log.time),
+    actor: log.actor,
+    action: log.action,
+    target: log.target,
+    result: 'Recorded',
+  }));
+  const logs = [...localLogs, ...dataManager.data.audit_logs];
   const auditTable = document.querySelector('table tbody');
   
   if (auditTable) {

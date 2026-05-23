@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secguard | Recovery Cases</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/platform.css" />
+  <script src="js/supabase-config.js"></script>
+</head>
+<body data-page="recovery-cases" data-workspace-page="recovery-cases">
+  <div class="page-shell">
+    <aside class="sidebar" data-platform-nav></aside>
+    <section class="main-shell">
+      <div class="page-header"><div><small class="notification-pill"><strong>Recovery</strong> investigations</small><h2>Recovery cases</h2><p>Assign officers, track progress, and manage active device recovery workflows.</p></div></div>
+      <div class="card-grid kpi-grid" data-workspace-kpis></div>
+      <div class="card-grid large-grid" style="margin-top: 22px;">
+        <article class="card"><div class="top-bar"><div><small>Create</small><strong>Add recovery case</strong></div></div><form class="form-grid" data-workspace-form></form></article>
+        <article class="card"><div class="top-bar"><div><small>Case stages</small><strong>Recovery workflow</strong></div></div><div class="activity-list"><div class="activity-item"><strong>Monitoring</strong><span>Last seen, SIM change, and device online state are tracked.</span></div><div class="activity-item"><strong>Officer review</strong><span>Evidence is assigned to a security officer for follow-up.</span></div></div></article>
+      </div>
+      <div class="card" style="margin-top: 22px;"><div class="top-bar"><div><small>Records</small><strong>Recovery case table</strong></div></div><div class="table-wrapper"><table data-workspace-table></table></div></div>
+    </section>
+  </div>
+  <script src="js/platform-nav.js"></script>
+  <script src="js/workspace.js"></script>
+</body>
+</html>

@@ -63,6 +63,30 @@ The production backend should use Supabase as the first real foundation:
 - Storage for receipts, warranty files, and investigation evidence
 - Edge Functions for ERP webhooks, telemetry ingestion, and fraud rules
 
+Supabase project URL is configured in `js/supabase-config.js`.
+
+To enable live Supabase mode, open Supabase Dashboard and copy:
+
+`Project Settings -> API -> Project API keys -> anon public key`
+
+Paste that value into `anonKey` in `js/supabase-config.js` and switch `enabled` to `true` when the frontend adapter is connected.
+
+## Working Local Platform Modules
+
+These authenticated modules now have local working forms using browser `localStorage`:
+
+- Organizations
+- Branches
+- Staff & Roles
+- ERP Connector
+- Theft Reports
+- Recovery Cases
+- Security Policies
+
+The local workspace also writes audit events, which appear in the Audit Logs page. This gives a testable platform flow before Supabase credentials are connected.
+
+The production database draft lives in `database/supabase-schema.sql`.
+
 ## Data Architecture
 
 ### Mock Data Service (`mock-data.js`)
