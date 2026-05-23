@@ -13,34 +13,7 @@
 </head>
 <body data-page="settings">
   <div class="page-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" />
-      </div>
-
-      <nav class="nav-group">
-        <a href="dashboard.html"><span></span><span>Dashboard</span></a>
-        <a href="organizations.html"><span></span><span>Organizations</span></a>
-        <a href="branches.html"><span></span><span>Branches</span></a>
-        <a href="staff.html"><span></span><span>Staff & Roles</span></a>
-        <a href="device-intelligence.html"><span></span><span>Device Intelligence</span></a>
-        <a href="erp-connector.html"><span></span><span>ERP Connector</span></a>
-        <a href="fraud.html"><span></span><span>Fraud Detection</span></a>
-        <a href="theft-reports.html"><span></span><span>Theft Reports</span></a>
-        <a href="recovery-cases.html"><span></span><span>Recovery Cases</span></a>
-        <a href="tracking.html"><span></span><span>Live Tracking</span></a>
-        <a href="customer.html"><span></span><span>Customers</span></a>
-        <a href="analytics.html"><span></span><span>Analytics</span></a>
-        <a href="audit-logs.html"><span></span><span>Audit Logs</span></a>
-        <a href="security-policies.html"><span></span><span>Security Policies</span></a>
-        <a href="settings.html"><span></span><span>Settings</span></a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="status-chip">Security policy active</div>
-        <div class="status-pill">Access control enabled</div>
-      </div>
-    </aside>
+    <aside class="sidebar" data-platform-nav></aside>
 
     <section class="main-shell">
       <div class="page-header">
@@ -133,6 +106,7 @@
       </div>
     </section>
   </div>
+  <script src="js/platform-nav.js"></script>
   <script src="js/platform.js"></script>
 </body>
 </html>

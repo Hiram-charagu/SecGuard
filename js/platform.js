@@ -273,6 +273,16 @@ function renderDeviceIntelligence() {
       </tr>
     `).join('');
   }
+
+  const activityList = document.querySelector('.activity-list');
+  if (activityList) {
+    activityList.innerHTML = dataManager.getDevices().slice(0, 3).map(device => `
+      <div class="activity-item">
+        <div><strong>${device.activation_status === 'active' ? 'Device activity detected' : 'Device awaiting activation'}</strong></div>
+        <span>${dataManager.formatIMEI(device.imei)} &bull; ERP ${device.erp_status} &bull; Risk ${device.risk_score}</span>
+      </div>
+    `).join('');
+  }
 }
 
 /**
@@ -340,6 +350,16 @@ function renderFraudDetection() {
         <td>${alert.status}</td>
         <td>${dataManager.formatDate(alert.created_at)}</td>
       </tr>
+    `).join('');
+  }
+
+  const activityList = document.querySelector('.activity-list');
+  if (activityList) {
+    activityList.innerHTML = dataManager.data.investigations.map(item => `
+      <div class="activity-item">
+        <div><strong>Case #${item.case_number} - ${item.type}</strong></div>
+        <span>Analyst: ${item.analyst} &bull; ${item.status} &bull; ${dataManager.formatDate(item.updated_at)}</span>
+      </div>
     `).join('');
   }
 }
@@ -417,6 +437,19 @@ function renderCustomerPortal() {
         `;
       })()}
     `).join('') : '<tr><td colspan="5">No customer records yet. Register or report a phone above.</td></tr>';
+  }
+
+  const activityList = document.querySelector('.activity-list');
+  if (activityList) {
+    activityList.innerHTML = customers.length ? customers.slice(0, 4).map(customer => {
+      const device = dataManager.getDevice((customer.devices || [])[0]);
+      return `
+        <div class="activity-item">
+          <div><strong>${customer.theft_reports ? 'Recovery workflow active' : 'Protection record active'}</strong></div>
+          <span>${customer.name} &bull; ${device ? dataManager.formatIMEI(device.imei) : 'Pending IMEI'} &bull; ${customer.recovery_progress}% complete</span>
+        </div>
+      `;
+    }).join('') : '<div class="activity-item"><strong>No recovery timeline yet</strong><span>Register or report a phone to start the workflow.</span></div>';
   }
 }
 
@@ -566,6 +599,13 @@ function initLoginForm() {
   if (!form) return;
   let selectedRole = localStorage.getItem('secguard_active_role') || 'company_admin';
 
+  function enterRole(role) {
+    localStorage.setItem('secguard_active_role', role || 'company_admin');
+    localStorage.setItem('secguard_demo_session', 'true');
+    const route = window.SecguardSupabase?.routeForRole(role) || roleRoutes[role] || 'dashboard.html';
+    window.location.href = route;
+  }
+
   const roleSelect = document.querySelector('[data-role-select]');
   const params = new URLSearchParams(window.location.search);
   selectedRole = params.get('role') || selectedRole;
@@ -589,15 +629,19 @@ function initLoginForm() {
     if (window.SecguardSupabase) {
       window.SecguardSupabase.login(email, password, selectedRole).then(({ error, local }) => {
         if (error && !local) {
-          alert(error.message || 'Supabase login failed. Use Sign up workspace user first if this account is new.');
-          return;
+          console.warn('Supabase login failed. Entering local demo portal for testing.', error);
         }
-        window.location.href = window.SecguardSupabase.routeForRole(selectedRole);
+        enterRole(selectedRole);
       });
       return;
     }
-    window.location.href = 'dashboard.html';
+    enterRole(selectedRole);
   });
+
+  const demoButton = document.querySelector('[data-demo-login]');
+  if (demoButton) {
+    demoButton.addEventListener('click', () => enterRole(selectedRole));
+  }
 
   const signupButton = document.querySelector('[data-signup]');
   if (signupButton) {
@@ -637,6 +681,16 @@ function initLoginForm() {
 function initDeviceForm() {
   if (currentPage !== 'device-intelligence') return;
   const deviceForm = document.getElementById('device-input-form');
+  const reviewButton = document.querySelector('.page-header .btn');
+  if (reviewButton) {
+    reviewButton.addEventListener('click', () => {
+      deviceForm?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      reviewButton.textContent = 'Queue ready';
+      setTimeout(() => {
+        reviewButton.textContent = 'Review device queue';
+      }, 1400);
+    });
+  }
   if (!deviceForm) return;
 
   deviceForm.addEventListener('submit', event => {
@@ -978,6 +1032,27 @@ function renderAnalyticsPage() {
   }
 }
 
+function initAnalyticsActions() {
+  if (currentPage !== 'analytics') return;
+  const exportButton = document.querySelector('.page-header .btn');
+  if (!exportButton) return;
+
+  exportButton.addEventListener('click', () => {
+    const snapshot = dataManager.exportSnapshot();
+    const blob = new Blob([snapshot], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `secguard-analytics-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    exportButton.textContent = 'Insights exported';
+    setTimeout(() => {
+      exportButton.textContent = 'Export insights';
+    }, 1400);
+  });
+}
+
 async function initPage() {
   initSidebarToggle();
   initLoginForm();
@@ -997,6 +1072,7 @@ async function initPage() {
   initFraudActions();
   initCustomerActions();
   initSettingsActions();
+  initAnalyticsActions();
   initActiveNav();
 
   // Render page-specific data

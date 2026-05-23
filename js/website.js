@@ -32,7 +32,18 @@ function initWebsiteForms() {
   });
 }
 
+function initPortalRoleLinks() {
+  document.querySelectorAll('a[href^="login.html?role="]').forEach(link => {
+    link.addEventListener('click', () => {
+      const url = new URL(link.href, window.location.href);
+      const role = url.searchParams.get('role');
+      if (role) localStorage.setItem('secguard_active_role', role);
+    });
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initWebsiteNavigation();
   initWebsiteForms();
+  initPortalRoleLinks();
 });
