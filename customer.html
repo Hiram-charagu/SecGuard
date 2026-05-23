@@ -19,21 +19,8 @@
       </div>
 
       <nav class="nav-group">
-        <a href="dashboard.html"><span></span><span>Dashboard</span></a>
-        <a href="organizations.html"><span></span><span>Organizations</span></a>
-        <a href="branches.html"><span></span><span>Branches</span></a>
-        <a href="staff.html"><span></span><span>Staff & Roles</span></a>
-        <a href="device-intelligence.html"><span></span><span>Device Intelligence</span></a>
-        <a href="erp-connector.html"><span></span><span>ERP Connector</span></a>
-        <a href="fraud.html"><span></span><span>Fraud Detection</span></a>
-        <a href="theft-reports.html"><span></span><span>Theft Reports</span></a>
-        <a href="recovery-cases.html"><span></span><span>Recovery Cases</span></a>
         <a href="tracking.html"><span></span><span>Live Tracking</span></a>
-        <a href="customer.html"><span></span><span>Customers</span></a>
-        <a href="analytics.html"><span></span><span>Analytics</span></a>
-        <a href="audit-logs.html"><span></span><span>Audit Logs</span></a>
-        <a href="security-policies.html"><span></span><span>Security Policies</span></a>
-        <a href="settings.html"><span></span><span>Settings</span></a>
+        <a href="customer.html"><span></span><span>My Protection</span></a>
       </nav>
 
       <div class="sidebar-footer">
@@ -45,15 +32,54 @@
     <section class="main-shell">
       <div class="page-header">
         <div>
-          <small class="notification-pill"><strong>18</strong> recovery requests</small>
+          <small class="notification-pill"><strong>Customer</strong> protected workspace</small>
           <h2>Customer protection portal</h2>
-          <p>Manage protected devices, theft reports, warranty status, and recovery progress for customer cases.</p>
+          <p>Register your phone, report theft or SIM changes, view warranty status, and follow recovery progress.</p>
         </div>
         <button class="btn">Create new case</button>
       </div>
 
       <div class="card-grid kpi-grid" id="customer-kpi-grid">
         <!-- Customer protection KPIs will be inserted here -->
+      </div>
+
+      <div class="card" style="margin-top: 22px;">
+        <div class="top-bar">
+          <div>
+            <small>Customer input</small>
+            <strong>Register or report a phone</strong>
+          </div>
+        </div>
+        <form class="form-grid" id="customer-case-form">
+          <div class="input-group">
+            <label for="customer-name">Your name</label>
+            <input id="customer-name" name="customerName" type="text" placeholder="Your full name" required />
+          </div>
+          <div class="input-group">
+            <label for="customer-phone">Phone number</label>
+            <input id="customer-phone" name="phone" type="text" placeholder="+254..." required />
+          </div>
+          <div class="input-group">
+            <label for="customer-imei">Device IMEI</label>
+            <input id="customer-imei" name="imei" type="text" placeholder="352009127765042" required />
+          </div>
+          <div class="input-group">
+            <label for="customer-model">Device model</label>
+            <input id="customer-model" name="model" type="text" placeholder="Samsung Galaxy S25 Ultra" required />
+          </div>
+          <div class="input-group">
+            <label for="customer-report-type">Request type</label>
+            <select id="customer-report-type" name="reportType">
+              <option value="protect">Register protection</option>
+              <option value="stolen">Report stolen</option>
+              <option value="sim-change">Report SIM change</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <button class="btn" type="submit">Save customer case</button>
+          </div>
+        </form>
+        <p class="form-status" data-customer-form-status></p>
       </div>
 
       <div class="card-grid large-grid" style="margin-top: 22px;">

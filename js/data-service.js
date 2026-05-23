@@ -316,33 +316,34 @@ class DataManager {
     return resolved;
   }
 
-  createCustomerCase() {
+  createCustomerCase(input = {}) {
     const caseId = `device_${Date.now()}`;
-    const customerName = `Walk-in Customer ${this.data.customers.length + 1}`;
+    const customerName = input.customerName || `Walk-in Customer ${this.data.customers.length + 1}`;
     const device = {
       id: caseId,
-      imei: `352009${Math.floor(100000000 + Math.random() * 899999999)}`,
-      model: 'Customer reported handset',
+      imei: String(input.imei || `352009${Math.floor(100000000 + Math.random() * 899999999)}`).replace(/\s/g, ''),
+      model: input.model || 'Customer reported handset',
       brand: 'Unknown',
       erp_status: 'sold',
       activation_status: 'active',
       branch: 'branch_alpha',
-      sim_changes: 0,
-      last_sim_change: 0,
+      sim_changes: input.reportType === 'sim-change' ? 1 : 0,
+      last_sim_change: input.reportType === 'sim-change' ? 1 : 0,
       erp_sync_status: 'synced',
-      risk_score: 55,
+      risk_score: input.reportType === 'stolen' ? 82 : 55,
       customer: customerName,
       warranty: 'review',
+      customer_owned: true,
       timestamp: new Date(),
     };
     const customer = {
       id: `cust_${Date.now()}`,
       name: customerName,
       email: 'customer@example.com',
-      phone: '+000-000-0000',
+      phone: input.phone || '+000-000-0000',
       devices: [caseId],
       protection_status: 'review',
-      theft_reports: 1,
+      theft_reports: input.reportType === 'stolen' ? 1 : 0,
       recovery_progress: 15,
     };
     this.data.devices.unshift(device);
@@ -351,7 +352,7 @@ class DataManager {
       id: `inv_${Date.now()}`,
       case_number: `RC-${Math.floor(1000 + Math.random() * 9000)}`,
       device_id: caseId,
-      type: 'Customer theft report',
+      type: input.reportType === 'sim-change' ? 'Customer SIM change report' : 'Customer theft report',
       status: 'assigned',
       analyst: 'Recovery queue',
       updated_at: new Date(),

@@ -5,6 +5,54 @@ const state = {
   liveSimulation: false,
 };
 
+const roleRoutes = {
+  super_admin: 'organizations.html',
+  company_admin: 'dashboard.html',
+  security_officer: 'fraud.html',
+  investigator: 'recovery-cases.html',
+  sales_staff: 'device-intelligence.html',
+  customer: 'customer.html',
+};
+
+const roleAccess = {
+  super_admin: ['dashboard.html', 'organizations.html', 'branches.html', 'staff.html', 'device-intelligence.html', 'erp-connector.html', 'fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'analytics.html', 'audit-logs.html', 'security-policies.html', 'settings.html'],
+  company_admin: ['dashboard.html', 'branches.html', 'staff.html', 'device-intelligence.html', 'erp-connector.html', 'fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'analytics.html', 'audit-logs.html', 'security-policies.html', 'settings.html'],
+  security_officer: ['fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'audit-logs.html'],
+  investigator: ['recovery-cases.html', 'theft-reports.html', 'tracking.html', 'customer.html', 'audit-logs.html'],
+  sales_staff: ['device-intelligence.html', 'customer.html', 'tracking.html'],
+  customer: ['customer.html', 'tracking.html'],
+};
+
+function getActiveRole() {
+  return localStorage.getItem('secguard_active_role') || 'company_admin';
+}
+
+function getCurrentFile() {
+  return location.pathname.split('/').pop() || 'index.html';
+}
+
+function enforceRoleAccess() {
+  if (currentPage === 'login') return true;
+  const role = getActiveRole();
+  const allowed = roleAccess[role] || roleAccess.company_admin;
+  const currentFile = getCurrentFile();
+  if (!allowed.includes(currentFile)) {
+    location.href = roleRoutes[role] || 'dashboard.html';
+    return false;
+  }
+  return true;
+}
+
+function applyRoleNavigation() {
+  if (currentPage === 'login') return;
+  const role = getActiveRole();
+  const allowed = roleAccess[role] || roleAccess.company_admin;
+  document.querySelectorAll('.nav-group a').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href && !allowed.includes(href)) link.remove();
+  });
+}
+
 function initSidebarToggle() {
   const toggle = document.querySelector('.menu-toggle');
   if (!toggle) return;
@@ -21,6 +69,19 @@ function getRandomInt(min, max) {
 
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
+}
+
+function getVisibleDevices() {
+  const devices = dataManager.getDevices();
+  if (getActiveRole() !== 'customer') return devices;
+  return devices.filter(device => device.customer_owned);
+}
+
+function getVisibleCustomers() {
+  const customers = dataManager.getCustomers();
+  if (getActiveRole() !== 'customer') return customers;
+  const ownedDeviceIds = new Set(getVisibleDevices().map(device => device.id));
+  return customers.filter(customer => (customer.devices || []).some(id => ownedDeviceIds.has(id)));
 }
 
 function renderAllPages() {
@@ -291,7 +352,7 @@ function renderCustomerPortal() {
   
   // Render KPI grid
   const customerKpiGrid = document.getElementById('customer-kpi-grid');
-  const customers = dataManager.getCustomers();
+  const customers = getVisibleCustomers();
   
   if (customerKpiGrid) {
     const theftReports = customers.reduce((sum, customer) => sum + Number(customer.theft_reports || 0), 0);
@@ -325,27 +386,37 @@ function renderCustomerPortal() {
   const deviceList = document.querySelector('.device-list');
   
   if (deviceList) {
-    deviceList.innerHTML = customers.slice(0, 2).map(customer => `
+    deviceList.innerHTML = customers.length ? customers.slice(0, 2).map(customer => `
+      ${(() => {
+        const device = dataManager.getDevice((customer.devices || [])[0]);
+        return `
       <div class="device-card">
-        <div class="status-pill"><span></span>Customer: ${customer.name}</div>
+        <div class="status-pill"><span></span>${device ? dataManager.formatIMEI(device.imei) : 'No IMEI yet'}</div>
         <div><strong>${customer.protection_status === 'active' ? 'Protected' : 'Under Review'}</strong></div>
-        <p>Devices: ${customer.devices.length} &bull; Recovery: ${customer.recovery_progress}% &bull; Theft reports: ${customer.theft_reports}</p>
+        <p>${customer.name} &bull; ${device ? device.model : 'Device pending'} &bull; Recovery: ${customer.recovery_progress}% &bull; Theft reports: ${customer.theft_reports}</p>
       </div>
-    `).join('');
+        `;
+      })()}
+    `).join('') : '<div class="activity-item"><strong>No customer device yet</strong><span>Use the form above to register or report your phone.</span></div>';
   }
 
   // Render customer table
   const custTable = document.querySelector('table tbody');
   if (custTable) {
-    custTable.innerHTML = customers.map(customer => `
+    custTable.innerHTML = customers.length ? customers.map(customer => `
+      ${(() => {
+        const device = dataManager.getDevice((customer.devices || [])[0]);
+        return `
       <tr>
         <td>${customer.name}</td>
-        <td>${customer.devices.length}</td>
+        <td>${device ? dataManager.formatIMEI(device.imei) : 'Pending'}</td>
         <td><span class="badge ${customer.protection_status === 'active' ? 'low' : 'medium'}">${customer.protection_status}</span></td>
-        <td>${customer.protection_status === 'active' ? 'Active' : 'Pending'}</td>
+        <td>${device ? device.warranty || 'Review' : 'Pending'}</td>
         <td>${customer.recovery_progress}%</td>
       </tr>
-    `).join('');
+        `;
+      })()}
+    `).join('') : '<tr><td colspan="5">No customer records yet. Register or report a phone above.</td></tr>';
   }
 }
 
@@ -612,16 +683,29 @@ function initDeviceForm() {
 function initCustomerActions() {
   if (currentPage !== 'customer') return;
   const createButton = document.querySelector('.page-header .btn');
+  const caseForm = document.getElementById('customer-case-form');
+  if (caseForm) {
+    caseForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(caseForm);
+      dataManager.createCustomerCase({
+        customerName: formData.get('customerName'),
+        phone: formData.get('phone'),
+        imei: formData.get('imei'),
+        model: formData.get('model'),
+        reportType: formData.get('reportType'),
+      });
+      renderCustomerPortal();
+      caseForm.reset();
+      const status = document.querySelector('[data-customer-form-status]');
+      if (status) status.textContent = 'Case saved. Open Live Tracking to see the reported phone in the tracking feed.';
+    });
+  }
+
   if (!createButton) return;
 
   createButton.addEventListener('click', () => {
-    dataManager.createCustomerCase();
-    renderCustomerPortal();
-    renderTrackingPage();
-    createButton.textContent = 'Case created';
-    setTimeout(() => {
-      createButton.textContent = 'Create new case';
-    }, 1400);
+    document.getElementById('customer-case-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 }
 
@@ -650,7 +734,7 @@ function renderTrackingPage() {
   const deviceList = document.querySelector('.device-list');
   const trackingTableBody = document.getElementById('tracking-table-body');
 
-  const devices = dataManager.getDevices().map(device => {
+  const devices = getVisibleDevices().map(device => {
     const signalStrength = getTrackingSignalStrength(device.risk_score);
     const routeStatus = device.erp_sync_status !== 'synced'
       ? 'ERP mismatch'
@@ -721,7 +805,7 @@ function renderTrackingPage() {
       .sort((a, b) => b.timestamp - a.timestamp)
       .slice(0, 3);
 
-    deviceList.innerHTML = topDevices.map(device => `
+    deviceList.innerHTML = topDevices.length ? topDevices.map(device => `
       <div class="device-card">
         <div class="status-pill ${device.routeStatus === 'On route' ? 'low' : device.routeStatus === 'ERP mismatch' ? 'high' : 'medium'}">
           <span></span>${dataManager.formatIMEI(device.imei)}
@@ -729,7 +813,7 @@ function renderTrackingPage() {
         <div><strong>${device.model}</strong></div>
         <p>Last online: ${device.lastSeenLabel} &bull; Signal: ${device.signalStrength} bars &bull; ${device.routeStatus}</p>
       </div>
-    `).join('');
+    `).join('') : '<div class="activity-item"><strong>No tracking record yet</strong><span>Register or report a phone from My Protection first.</span></div>';
   }
 
   const mapSummary = document.getElementById('tracking-map-summary');
@@ -743,7 +827,7 @@ function renderTrackingPage() {
   }
 
   if (trackingTableBody) {
-    trackingTableBody.innerHTML = devices.map(device => `
+    trackingTableBody.innerHTML = devices.length ? devices.map(device => `
       <tr>
         <td>${dataManager.formatIMEI(device.imei)}<br><small>${device.model}</small></td>
         <td>${device.lastSeenLabel}</td>
@@ -751,7 +835,7 @@ function renderTrackingPage() {
         <td>${device.signalLabel}</td>
         <td>${device.erp_sync_status}</td>
       </tr>
-    `).join('');
+    `).join('') : '<tr><td colspan="5">No tracked phone yet. Register or report one from My Protection.</td></tr>';
   }
 }
 
@@ -897,6 +981,9 @@ function renderAnalyticsPage() {
 async function initPage() {
   initSidebarToggle();
   initLoginForm();
+
+  if (!enforceRoleAccess()) return;
+  applyRoleNavigation();
 
   if (typeof dataManager === 'undefined') return;
 
