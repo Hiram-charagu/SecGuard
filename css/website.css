@@ -9,8 +9,8 @@ body[data-page="website"] {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 24px;
-  padding: 20px clamp(20px, 4vw, 64px);
+  gap: 18px;
+  padding: 16px clamp(18px, 4vw, 52px);
   background: rgba(3, 5, 12, 0.84);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(18px);
@@ -21,7 +21,7 @@ body[data-page="website"] {
 .hero-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 9px;
 }
 
 .site-nav {
@@ -30,7 +30,7 @@ body[data-page="website"] {
 
 .site-nav a {
   display: inline-flex;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 12px;
   color: var(--muted);
   font-weight: 700;
@@ -50,7 +50,7 @@ body[data-page="website"] {
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   color: var(--text);
-  padding: 10px 12px;
+  padding: 8px 10px;
 }
 
 .site-hero,
@@ -67,8 +67,8 @@ body[data-page="website"] {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
   align-items: center;
-  gap: 42px;
-  padding: 56px 0 42px;
+  gap: 34px;
+  padding: 44px 0 34px;
 }
 
 .hero-copy h1,
@@ -99,8 +99,8 @@ body[data-page="website"] {
 .eyebrow {
   display: inline-flex;
   width: fit-content;
-  margin-bottom: 18px;
-  padding: 8px 12px;
+  margin-bottom: 14px;
+  padding: 6px 10px;
   border-radius: 999px;
   color: #b8d5ff;
   background: rgba(91, 135, 255, 0.12);
@@ -120,7 +120,7 @@ body[data-page="website"] {
 
 .hero-console {
   border-radius: 28px;
-  padding: 22px;
+  padding: 18px;
 }
 
 .console-header {
@@ -164,7 +164,7 @@ body[data-page="website"] {
 .architecture-list div {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.04);
-  padding: 16px;
+  padding: 13px;
 }
 
 .console-grid small,
@@ -207,13 +207,13 @@ body[data-page="website"] {
 .site-band,
 .site-page,
 .split-section {
-  padding: 82px 0;
+  padding: 64px 0;
 }
 
 .section-heading {
   display: grid;
-  gap: 14px;
-  margin-bottom: 30px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .section-heading h1,
@@ -233,17 +233,17 @@ body[data-page="website"] {
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 14px;
 }
 
 .feature-card,
 .pricing-card {
   min-height: 230px;
   border-radius: 22px;
-  padding: 24px;
+  padding: 19px;
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: 9px;
 }
 
 .feature-card h3,
@@ -262,7 +262,7 @@ body[data-page="website"] {
 .split-section {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
-  gap: 36px;
+  gap: 28px;
   align-items: start;
 }
 
@@ -285,7 +285,7 @@ body[data-page="website"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
@@ -296,9 +296,9 @@ body[data-page="website"] {
 
 .site-form {
   border-radius: 24px;
-  padding: 24px;
+  padding: 19px;
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .site-footer {

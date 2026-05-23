@@ -61,7 +61,7 @@ button {
 .brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .brand-crest {
@@ -82,7 +82,7 @@ button {
 .brand-title h1 {
   margin: 0;
   font-size: 1.05rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.015em;
 }
 
 .brand-title p {
@@ -97,7 +97,7 @@ button {
   justify-content: center;
   border: none;
   border-radius: 14px;
-  padding: 12px 18px;
+  padding: 10px 15px;
   background: linear-gradient(135deg, rgba(91, 135, 255, 0.18), rgba(115, 243, 232, 0.12));
   color: var(--text);
   transition: transform 160ms ease, background 160ms ease;
@@ -131,7 +131,7 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(16, 22, 39, 0.96);
   color: var(--text);
-  padding: 14px 16px;
+  padding: 12px 14px;
 }
 
 .input-group textarea {
