@@ -500,23 +500,23 @@ body[data-page="website"] {
 .portal-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 
 .portal-card {
   position: relative;
   overflow: hidden;
-  min-height: 340px;
+  min-height: 284px;
   display: grid;
   align-content: start;
-  gap: 16px;
+  gap: 10px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 28px;
   background:
     radial-gradient(circle at 18% 0%, rgba(115, 243, 232, 0.14), transparent 18rem),
     linear-gradient(180deg, rgba(15, 24, 45, 0.92), rgba(6, 11, 23, 0.86));
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
-  padding: 22px;
+  padding: 16px;
 }
 
 .portal-card::before {
@@ -536,7 +536,7 @@ body[data-page="website"] {
 .portal-card-top {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
 }
 
@@ -544,17 +544,17 @@ body[data-page="website"] {
   border-radius: 999px;
   background: rgba(255,255,255,.06);
   color: #c5d4ee;
-  padding: 7px 10px;
-  font-size: 0.78rem;
+  padding: 6px 9px;
+  font-size: 0.74rem;
   font-weight: 800;
 }
 
 .portal-crest {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   color: #f8fbff;
   font-weight: 900;
   background: linear-gradient(135deg, rgba(91,135,255,.95), rgba(115,243,232,.82));
@@ -562,20 +562,21 @@ body[data-page="website"] {
 }
 
 .portal-card h2 {
-  margin: 8px 0 0;
-  font-size: 1.65rem;
+  margin: 4px 0 0;
+  font-size: 1.38rem;
 }
 
 .portal-card p {
   margin: 0;
   color: var(--muted);
-  line-height: 1.65;
+  line-height: 1.5;
+  font-size: 0.95rem;
 }
 
 .portal-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .portal-chips span {
@@ -583,8 +584,8 @@ body[data-page="website"] {
   border-radius: 999px;
   background: rgba(255,255,255,.045);
   color: #d6e3f8;
-  padding: 7px 10px;
-  font-size: 0.8rem;
+  padding: 5px 8px;
+  font-size: 0.76rem;
   font-weight: 800;
 }
 
