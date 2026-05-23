@@ -12,118 +12,150 @@
 </head>
 <body data-page="website">
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Secguard home">
-      <img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" />
+    <a class="brand site-brand" href="index.html" aria-label="Secguard home">
+      <span class="brand-shield" aria-hidden="true"></span>
+      <strong>Secguard</strong>
     </a>
     <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
     <nav class="site-nav" aria-label="Public navigation">
-      <a href="index.html">Home</a>
       <a href="portals.html">Portals</a>
-      <a href="about.html">About</a>
-      <a href="features.html">Services</a>
-      <a href="pricing.html">Pricing</a>
+      <a href="features.html">Platform</a>
       <a href="security.html">Security</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">Company</a>
       <a href="contact.html">Contact</a>
     </nav>
     <div class="site-actions">
       <a class="btn btn-ghost" href="login.html">Login</a>
-      <a class="btn" href="demo-request.html">Request demo</a>
+      <a class="btn" href="demo-request.html">Book walkthrough</a>
     </div>
   </header>
 
   <main>
-    <section class="marketing-hero">
+    <section class="home-hero reveal">
       <div class="hero-copy">
-        <span class="eyebrow">ERP-connected phone security</span>
-        <h1>Next-Generation Device Security & Fraud Protection</h1>
-        <p>Secguard helps phone businesses detect fraud, monitor devices, secure inventory, and protect customer ecosystems through intelligent realtime monitoring.</p>
+        <span class="eyebrow">ERP-connected device security</span>
+        <h1 class="typing-headline" data-typing="Every phone. Protected.">Every phone. Protected.</h1>
+        <p>Secguard helps phone businesses detect illegal sales, monitor suspicious devices, secure inventory, and protect customer ecosystems through intelligent realtime monitoring.</p>
         <div class="hero-actions">
           <a class="btn" href="login.html">Get started</a>
-          <a class="btn btn-ghost" href="demo-request.html">Request demo</a>
+          <a class="btn btn-ghost" href="demo-request.html">See your ERP connected</a>
+        </div>
+        <div class="trusted-row" aria-label="Trusted business categories">
+          <span>Phone retailers</span>
+          <span>ERP teams</span>
+          <span>Security officers</span>
+          <span>Recovery desks</span>
         </div>
       </div>
 
-      <div class="hero-visual" aria-label="Secguard platform preview">
-        <img class="hero-photo" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" alt="Modern smartphone device security preview">
-        <div class="hero-dashboard-card">
-          <div class="console-header">
-            <span></span><span></span><span></span>
-            <strong>Live fraud monitor</strong>
-          </div>
-          <div class="mini-chart">
-            <i style="height:42%"></i><i style="height:70%"></i><i style="height:52%"></i><i style="height:88%"></i><i style="height:62%"></i><i style="height:95%"></i>
-          </div>
-          <div class="threat-row threat-critical">
-            <strong>ALERT</strong>
-            <span>Unsold device activated</span>
-          </div>
+      <div class="hero-orbit" aria-label="Animated Secguard device intelligence visualization">
+        <div class="signal-grid"></div>
+        <div class="scan-sweep"></div>
+        <svg class="node-lines" viewBox="0 0 760 620" role="img" aria-label="Connected device network">
+          <path d="M126 168 L292 94 L514 142 L636 310 L478 486 L228 438 Z" />
+          <path d="M292 94 L360 306 L126 168 M360 306 L636 310 M360 306 L478 486 M360 306 L228 438" />
+        </svg>
+        <span class="device-node n1"></span>
+        <span class="device-node n2"></span>
+        <span class="device-node n3"></span>
+        <span class="device-node n4 danger"></span>
+        <span class="device-node n5"></span>
+        <span class="device-node n6 safe"></span>
+        <div class="orbit-core">
+          <span></span>
+          <strong>SECURITY ENGINE</strong>
+          <small>fraud rules active</small>
         </div>
-        <div class="floating-device-card">
+        <article class="hero-alert-card">
+          <small>Critical alert</small>
+          <strong>Unsold device activated</strong>
+          <span>IMEI 3520 0912 7765 042</span>
+        </article>
+        <article class="hero-event-card">
           <span class="live-dot"></span>
           <div>
-            <strong>18,420</strong>
-            <small>devices protected</small>
+            <strong data-cycle-alert>SIM swap detected</strong>
+            <small data-cycle-meta>Branch Delta - 2s ago</small>
           </div>
-        </div>
+        </article>
+        <article class="hero-counter-card">
+          <strong data-count="18420">0</strong>
+          <span>devices protected</span>
+        </article>
       </div>
     </section>
 
-    <section class="stats-strip">
-      <article><strong>18,420</strong><span>Devices protected</span></article>
-      <article><strong>1,268</strong><span>Fraud alerts reviewed</span></article>
-      <article><strong>84</strong><span>Active companies</span></article>
-      <article><strong>732</strong><span>Recovered devices</span></article>
+    <section class="trust-band reveal">
+      <span>Built for phone retailers using ERP inventory, branch sales, warranty records, and customer recovery workflows.</span>
+      <strong>Consent-based. Audit-ready. Supabase-ready.</strong>
     </section>
 
-    <section class="site-band">
+    <section class="stats-strip intense-stats reveal">
+      <article><strong data-count="18420">0</strong><span>Devices protected</span></article>
+      <article><strong data-count="1268">0</strong><span>Fraud alerts reviewed</span></article>
+      <article><strong data-count="84">0</strong><span>Active companies</span></article>
+      <article><strong data-count="732">0</strong><span>Recovered devices</span></article>
+    </section>
+
+    <section class="site-band reveal">
       <div class="section-heading">
         <span class="eyebrow">Security intelligence layer</span>
-        <h2>Everything the ERP cannot see after a phone leaves inventory.</h2>
-        <p>Secguard connects inventory records, IMEI profiles, customer protection, fraud rules, and recovery cases into one security command layer.</p>
+        <h2>Everything your ERP cannot see after a phone leaves inventory.</h2>
+        <p>Secguard connects inventory records, IMEI profiles, customer protection, fraud rules, tracking events, recovery cases, and audit trails into one command layer.</p>
       </div>
-      <div class="feature-grid feature-grid-six">
-        <article class="feature-card"><small>01</small><h3>Device Intelligence</h3><p>Track IMEI, serial number, branch, status, SIM changes, warranty, ownership, and risk score.</p></article>
-        <article class="feature-card"><small>02</small><h3>Fraud Detection</h3><p>Detect illegal sales, unsold active phones, receipt mismatches, duplicate identifiers, and staff anomalies.</p></article>
-        <article class="feature-card"><small>03</small><h3>Realtime Tracking</h3><p>Monitor last seen activity, device status, location signals, and investigation movement in realtime.</p></article>
-        <article class="feature-card"><small>04</small><h3>ERP Integration</h3><p>Sync inventory, sales, branches, staff, customers, receipts, and warranty activation from the ERP.</p></article>
-        <article class="feature-card"><small>05</small><h3>Customer Protection</h3><p>Customers can enroll devices, report theft, view warranty, and follow recovery progress.</p></article>
-        <article class="feature-card"><small>06</small><h3>Security Analytics</h3><p>Understand branch risk, fraud trends, recovery success, stock inconsistencies, and threat patterns.</p></article>
+      <div class="feature-bento">
+        <article class="feature-card bento-large accent-cyan">
+          <small>01 / Device Intelligence</small>
+          <h3>Know every device before it becomes a problem.</h3>
+          <p>Track IMEI, serial number, branch, ERP status, SIM changes, activation state, owner history, warranty, and risk score from one live dossier.</p>
+        </article>
+        <article class="feature-card accent-red"><small>02</small><h3>Fraud Detection</h3><p>Flag unsold active phones, duplicate IMEIs, suspicious staff actions, receipt gaps, and branch mismatches.</p></article>
+        <article class="feature-card accent-blue"><small>03</small><h3>Realtime Tracking</h3><p>Plot last-seen signals, network events, and SIM movement as the mobile app streams telemetry.</p></article>
+        <article class="feature-card accent-purple"><small>04</small><h3>ERP Integration</h3><p>Receive stock, sales, branch transfer, customer, receipt, and warranty events from the existing ERP.</p></article>
+        <article class="feature-card accent-green"><small>05</small><h3>Customer Protection</h3><p>Let customers enroll devices, report theft, follow recovery progress, and see warranty status.</p></article>
+        <article class="feature-card accent-amber"><small>06</small><h3>Security Analytics</h3><p>Understand branch risk, recovery success, fraud trends, device activity, and audit exposure.</p></article>
       </div>
     </section>
 
-    <section class="showcase-section">
+    <section class="workflow-section reveal">
       <div class="showcase-copy">
         <span class="eyebrow">How it works</span>
-        <h2>From stock entry to recovery, every device gets a security lifecycle.</h2>
+        <h2>A full lifecycle from stock entry to recovery.</h2>
       </div>
-      <div class="workflow-grid">
-        <div><span>1</span><strong>Devices registered</strong><p>IMEI, serial number, model, branch, and supplier are recorded.</p></div>
-        <div><span>2</span><strong>ERP inventory synced</strong><p>Sales, transfers, receipts, and warranties stay connected.</p></div>
-        <div><span>3</span><strong>Activity monitored</strong><p>Device activation, SIM changes, and customer protection events stream in.</p></div>
-        <div><span>4</span><strong>Fraud detected</strong><p>Rules flag suspicious devices, staff actions, and inventory mismatches.</p></div>
-        <div><span>5</span><strong>Alerts generated</strong><p>Security officers receive prioritized cases with evidence.</p></div>
-        <div><span>6</span><strong>Recovery activated</strong><p>Theft reports start a focused monitoring and investigation workflow.</p></div>
+      <div class="workflow-line">
+        <article><span>1</span><strong>Devices registered</strong><p>IMEI, serial, model, branch, and supplier are recorded.</p></article>
+        <article><span>2</span><strong>ERP synced</strong><p>Sales, transfers, receipts, and warranties stay connected.</p></article>
+        <article><span>3</span><strong>Activity monitored</strong><p>Activation, SIM, customer, and location events stream in.</p></article>
+        <article><span>4</span><strong>Fraud detected</strong><p>Rules flag suspicious devices and inventory mismatch.</p></article>
+        <article><span>5</span><strong>Recovery activated</strong><p>Theft reports start case tracking and officer workflows.</p></article>
       </div>
     </section>
 
-    <section class="dashboard-ad">
-      <div class="dashboard-preview">
+    <section class="dashboard-ad reveal">
+      <div class="section-heading dashboard-heading">
+        <span class="eyebrow">Command center preview</span>
+        <h2>Make the invisible device movement visible.</h2>
+      </div>
+      <div class="live-dashboard-preview">
         <div class="dashboard-top">
           <div><small>Secguard command center</small><strong>Realtime security operations</strong></div>
-          <span>Live</span>
+          <span><i></i>Live</span>
         </div>
         <div class="dashboard-kpis">
-          <div><small>Fraud risk</small><strong>84</strong></div>
-          <div><small>ERP health</small><strong>98.9%</strong></div>
-          <div><small>Open cases</small><strong>37</strong></div>
+          <div><small>Fraud risk</small><strong data-count="84">0</strong></div>
+          <div><small>ERP health</small><strong data-count="99" data-suffix="%">0%</strong></div>
+          <div><small>Open cases</small><strong data-count="37">0</strong></div>
         </div>
         <div class="dashboard-layout">
           <div class="map-preview">
             <span class="map-point point-a"></span>
-            <span class="map-point point-b"></span>
-            <span class="map-point point-c"></span>
+            <span class="map-point point-b danger"></span>
+            <span class="map-point point-c safe"></span>
+            <span class="map-point point-d"></span>
+            <div class="map-label">Nairobi security grid</div>
           </div>
-          <div class="activity-feed">
+          <div class="activity-feed" data-threat-feed>
             <div><strong>ALERT</strong><span>Unsold device activated in Nairobi CBD.</span></div>
             <div><strong>WARNING</strong><span>SIM swap detected on protected device.</span></div>
             <div><strong>INFO</strong><span>Branch inventory mismatch detected.</span></div>
@@ -132,94 +164,108 @@
       </div>
     </section>
 
-    <section class="site-band">
+    <section class="site-band reveal">
       <div class="section-heading">
-        <span class="eyebrow">Protected devices</span>
-        <h2>Premium customer protection that feels trustworthy.</h2>
+        <span class="eyebrow">Operational portals</span>
+        <h2>Designed around the people who actually use it.</h2>
       </div>
-      <div class="device-showcase">
-        <article><img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=80" alt="Samsung smartphone"><strong>Samsung Galaxy S25 Ultra</strong><span>Protection active</span><div class="score"><i style="width:94%"></i></div><small>Security score 94</small></article>
-        <article><img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?auto=format&fit=crop&w=700&q=80" alt="iPhone device"><strong>iPhone 17 Pro</strong><span>Recovery ready</span><div class="score"><i style="width:88%"></i></div><small>Security score 88</small></article>
-        <article><img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=700&q=80" alt="Android smartphone"><strong>Google Pixel 10</strong><span>SIM watch enabled</span><div class="score"><i style="width:71%"></i></div><small>Security score 71</small></article>
+      <div class="role-showcase">
+        <article>
+          <small>Company Admin</small>
+          <strong>Inventory + fraud visibility</strong>
+          <p>Branch health, device roster, ERP sync state, staff activity, and management reports.</p>
+          <span>Dashboard - Devices - Analytics</span>
+        </article>
+        <article>
+          <small>Security Officer</small>
+          <strong>Alerts + investigations</strong>
+          <p>Assign, escalate, dismiss, document, and resolve suspicious devices and theft cases.</p>
+          <span>Fraud - Tracking - Recovery</span>
+        </article>
+        <article>
+          <small>Customer</small>
+          <strong>Protection + recovery</strong>
+          <p>Register a phone, report stolen devices, view warranty, and follow recovery progress.</p>
+          <span>My Protection - Live Tracking</span>
+        </article>
       </div>
     </section>
 
-    <section class="mobile-showcase">
-      <div>
-        <span class="eyebrow">Mobile app client</span>
-        <h2>The customer app powers device recovery and protection.</h2>
-        <p>The mobile client enables consent-based protection, theft reporting, last seen monitoring, SIM alerts, warranty details, and recovery updates.</p>
+    <section class="social-proof reveal">
+      <div class="section-heading">
+        <span class="eyebrow">Proof signals</span>
+        <h2>Built for teams that cannot afford blind inventory.</h2>
       </div>
-      <div class="phone-frame">
-        <img src="https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?auto=format&fit=crop&w=700&q=80" alt="Mobile application preview">
-        <div class="phone-overlay">
-          <strong>Recovery mode</strong>
-          <span>Last seen 2 minutes ago</span>
-        </div>
+      <div class="testimonial-grid">
+        <article><strong>"We can see device risk before it reaches finance."</strong><p>Operations Director, Metro Phone Retail</p><span>★★★★★</span></article>
+        <article><strong>"The ERP tells us what was sold. Secguard tells us what moved."</strong><p>Security Lead, Eastline Electronics</p><span>★★★★★</span></article>
+        <article><strong>"The recovery workflow made theft reporting feel controlled."</strong><p>Customer Success Manager, DeviceCare Hub</p><span>★★★★★</span></article>
       </div>
     </section>
 
-    <section class="site-band compact-cta">
-      <div>
-        <span class="eyebrow">Ready for rollout</span>
-        <h2>Deploy Secguard as the security intelligence layer beside your ERP.</h2>
+    <section class="faq-section reveal">
+      <div class="section-heading">
+        <span class="eyebrow">FAQ</span>
+        <h2>Built for real rollout questions.</h2>
       </div>
-      <a class="btn" href="demo-request.html">Request demo</a>
+      <div class="faq-grid">
+        <details open><summary>Does it work with MAPPHEX or another ERP?</summary><p>Yes. Secguard is structured as a security intelligence layer that receives inventory, sale, branch, receipt, and warranty events through ERP webhooks or scheduled sync.</p></details>
+        <details><summary>Does the customer app require special hardware?</summary><p>No. The mobile client uses consent-based app telemetry, location permission, SIM/network events, and protected account workflows.</p></details>
+        <details><summary>Is tracking continuous or on demand?</summary><p>Tracking should be policy-based and consent-driven. Normal protection can use last-seen updates, while theft cases can increase monitoring frequency.</p></details>
+        <details><summary>What happens if a device goes offline?</summary><p>The platform keeps the last known location, SIM state, timestamp, device history, and recovery case status until the client reports again.</p></details>
+      </div>
+    </section>
+
+    <section class="closing-cta reveal">
+      <div class="cta-shield" aria-hidden="true"></div>
+      <span class="eyebrow">Ready for rollout</span>
+      <h2>Fraud stops faster when every phone has a security record.</h2>
+      <p>Deploy Secguard beside your ERP and start testing device intelligence, fraud detection, customer protection, and recovery operations.</p>
+      <div class="hero-actions">
+        <a class="btn" href="demo-request.html">Book a 20-minute walkthrough</a>
+        <a class="btn btn-ghost" href="portals.html">View portals</a>
+      </div>
     </section>
   </main>
-  <footer class="site-footer textured-footer">
-    <div class="footer-grid footer-mega-grid">
+
+  <footer class="site-footer refined-home-footer">
+    <div class="footer-grid refined-footer-grid">
+      <div class="footer-brand">
+        <img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" />
+        <p>Device intelligence and fraud protection for phone-selling companies connected to ERP workflows.</p>
+        <div class="social-row" aria-label="Social links">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="X">X</a>
+        </div>
+      </div>
       <div class="footer-column">
-        <h3>Explore Secguard</h3>
-        <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-        <span>Device Intelligence</span>
-        <span>Fraud Protection</span>
-        <span>Realtime Tracking</span>
+        <h3>Platform</h3>
+        <a href="portals.html">Portals</a>
+        <a href="login.html?role=company_admin">Dashboard</a>
+        <a href="login.html?role=security_officer">Fraud Center</a>
+        <a href="login.html?role=customer">Customer Protection</a>
       </div>
       <div class="footer-column">
         <h3>Company</h3>
-        <a href="about.html">About Us</a>
-        <a href="security.html">Security Model</a>
+        <a href="about.html">About</a>
+        <a href="features.html">Platform</a>
+        <a href="security.html">Security</a>
         <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact</a>
       </div>
-      <div class="footer-column">
-        <h3>Resources</h3>
-        <a href="README.md">Documentation</a>
-        <a href="ARCHITECTURE.md">Platform Architecture</a>
-        <a href="demo-request.html">Implementation Plan</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-      </div>
-      <div class="footer-column">
-        <h3>Community</h3>
-        <a href="contact.html">Customer Support</a>
-        <a href="contact.html">Partner Network</a>
-        <a href="demo-request.html">Request Demo</a>
-        <a href="login.html">Organization Login</a>
+      <div class="footer-column trust-column">
+        <h3>Trust</h3>
+        <span>SOC 2 ready</span>
+        <span>GDPR aware</span>
+        <span>Encrypted at rest</span>
+        <span>Audit log first</span>
       </div>
     </div>
-
-    <div class="footer-statement">
-      <p>Register an organization, connect the ERP, enroll devices, monitor fraud signals, and open the matching security workspace tools.</p>
-      <p>Manage branches, staff, customers, inventory sync, warranties, theft cases, device telemetry, alerts, investigations, and audit reports.</p>
-      <p>Control access with roles, permissions, secure records, realtime activity, recovery workflows, and enterprise security policies.</p>
-    </div>
-
-    <div class="footer-social">
-      <h3>Follow Us</h3>
-      <div class="social-row" aria-label="Social links">
-        <a href="#" aria-label="Facebook">f</a>
-        <a href="#" aria-label="LinkedIn">in</a>
-        <a href="#" aria-label="Instagram">ig</a>
-        <a href="#" aria-label="X">X</a>
-      </div>
-    </div>
-
     <div class="footer-bottom">
       <span>&copy; 2026 Secguard. Enterprise device intelligence and fraud protection.</span>
-      <span>Built for ERP integration, audit trails, and recovery operations.</span>
+      <span>ERP sync. Device telemetry. Fraud rules. Recovery workflows.</span>
     </div>
   </footer>
   <script src="js/website.js"></script>
