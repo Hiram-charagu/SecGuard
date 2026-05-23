@@ -22,11 +22,7 @@ function renderPlatformNav() {
   const current = location.pathname.split('/').pop();
   target.innerHTML = `
     <div class="brand">
-      <div class="brand-crest"><span style="color:#5b87ff;font-weight:800;">S</span></div>
-      <div class="brand-title">
-        <h1>Secguard</h1>
-        <p>Security workspace</p>
-      </div>
+      <img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" />
     </div>
     <nav class="nav-group">
       ${platformLinks.map(([href, label]) => `<a href="${href}" class="${href === current ? 'active' : ''}"><span></span><span>${label}</span></a>`).join('')}

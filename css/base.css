@@ -64,6 +64,15 @@ button {
   gap: 10px;
 }
 
+.brand-logo {
+  display: block;
+  width: 156px;
+  height: auto;
+  max-height: 58px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .brand-crest {
   width: 42px;
   height: 42px;

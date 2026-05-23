@@ -23,6 +23,11 @@
   gap: 14px;
 }
 
+.sidebar .brand-logo {
+  width: 172px;
+  max-height: 64px;
+}
+
 .brand-crest {
   width: 42px;
   height: 42px;
