@@ -428,46 +428,36 @@ tbody tr:hover {
 
 .role-login-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
-  margin: 20px 0;
+  margin: 18px 0;
 }
 
 .role-login-card {
-  display: grid;
-  gap: 6px;
-  text-align: left;
+  display: none;
+}
+
+.login-role-select {
+  margin: 18px 0;
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 18px;
   background: rgba(255,255,255,.045);
-  color: var(--text);
   padding: 12px;
 }
 
-.role-login-card span {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  background: rgba(115, 243, 232, 0.12);
-  color: var(--accent-2);
-  font-weight: 800;
-}
-
-.role-login-card strong {
-  font-size: 0.95rem;
-}
-
-.role-login-card small {
+.login-role-select span {
+  display: block;
   color: var(--muted);
-  line-height: 1.4;
+  font-size: 0.82rem;
+  margin-bottom: 8px;
 }
 
-.role-login-card.active,
-.role-login-card:hover {
-  border-color: rgba(115, 243, 232, 0.36);
-  background: rgba(91, 135, 255, 0.12);
+.login-role-select select {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(16, 22, 39, 0.96);
+  color: var(--text);
+  padding: 12px 14px;
 }
 
 .login-panel button {

@@ -27,22 +27,16 @@
       <h1>Access the command layer</h1>
       <p>Login to monitor device security, fraud signals, and live tracking with premium enterprise controls.</p>
 
-      <div class="role-login-grid" aria-label="Choose user role">
-        <button class="role-login-card active" type="button" data-role-login="company_admin">
-          <span>CA</span><strong>Company Admin</strong><small>Dashboard, branches, staff, ERP sync</small>
-        </button>
-        <button class="role-login-card" type="button" data-role-login="security_officer">
-          <span>SO</span><strong>Security Officer</strong><small>Fraud center and theft reports</small>
-        </button>
-        <button class="role-login-card" type="button" data-role-login="investigator">
-          <span>IN</span><strong>Investigator</strong><small>Recovery cases and evidence</small>
-        </button>
-        <button class="role-login-card" type="button" data-role-login="sales_staff">
-          <span>SS</span><strong>Sales Staff</strong><small>Device registry and warranty handoff</small>
-        </button>
-        <button class="role-login-card" type="button" data-role-login="customer">
-          <span>CU</span><strong>Customer</strong><small>Protection portal and theft reports</small>
-        </button>
+      <div class="login-role-select">
+        <span>Signing in through</span>
+        <select data-role-select>
+          <option value="company_admin">Company Admin Portal</option>
+          <option value="security_officer">Security Officer Portal</option>
+          <option value="investigator">Investigator Portal</option>
+          <option value="sales_staff">Sales Staff Portal</option>
+          <option value="customer">Customer Portal</option>
+          <option value="super_admin">Super Admin Portal</option>
+        </select>
       </div>
 
       <form class="login-form">
@@ -61,7 +55,7 @@
 
       <div class="footer-note">
         <p>Supabase auth is initialized. Local fallback remains available while database tables and policies are being prepared.</p>
-        <p><a href="index.html">Back to website</a></p>
+        <p><a href="portals.html">Choose another portal</a> · <a href="index.html">Back to website</a></p>
       </div>
     </section>
   </main>

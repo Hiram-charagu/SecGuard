@@ -486,15 +486,17 @@ function initLoginForm() {
   if (!form) return;
   let selectedRole = localStorage.getItem('secguard_active_role') || 'company_admin';
 
-  document.querySelectorAll('[data-role-login]').forEach(button => {
-    button.classList.toggle('active', button.dataset.roleLogin === selectedRole);
-    button.addEventListener('click', () => {
-      selectedRole = button.dataset.roleLogin;
+  const roleSelect = document.querySelector('[data-role-select]');
+  const params = new URLSearchParams(window.location.search);
+  selectedRole = params.get('role') || selectedRole;
+  localStorage.setItem('secguard_active_role', selectedRole);
+  if (roleSelect) {
+    roleSelect.value = selectedRole;
+    roleSelect.addEventListener('change', () => {
+      selectedRole = roleSelect.value;
       localStorage.setItem('secguard_active_role', selectedRole);
-      document.querySelectorAll('[data-role-login]').forEach(item => item.classList.remove('active'));
-      button.classList.add('active');
     });
-  });
+  }
 
   form.addEventListener('submit', event => {
     event.preventDefault();
