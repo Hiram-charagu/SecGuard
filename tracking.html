@@ -9,7 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/platform.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="js/data-service.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body data-page="tracking">
   <div class="page-shell">
@@ -27,10 +30,8 @@
 
       <div class="card-grid large-grid">
         <article class="card map-card">
-          <div class="map-placeholder">
-            <strong>Map placeholder</strong>
-            <p id="tracking-map-summary">Live map functionality will visualize device telemetry when connected.</p>
-          </div>
+          <div id="tracking-map" aria-label="Live device tracking map"></div>
+          <p id="tracking-map-summary">Live telemetry map initializing.</p>
         </article>
 
         <article class="card">

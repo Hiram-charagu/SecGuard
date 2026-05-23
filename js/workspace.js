@@ -32,16 +32,25 @@ const SecguardStore = (() => {
   };
 
   function load() {
-    const saved = localStorage.getItem(key);
-    if (!saved) {
-      localStorage.setItem(key, JSON.stringify(seed));
+    try {
+      const saved = localStorage.getItem(key);
+      if (!saved) {
+        localStorage.setItem(key, JSON.stringify(seed));
+        return structuredClone(seed);
+      }
+      return JSON.parse(saved);
+    } catch (error) {
+      console.warn('Workspace storage unavailable. Running workspace in memory-only mode.', error);
       return structuredClone(seed);
     }
-    return JSON.parse(saved);
   }
 
   function save(data) {
-    localStorage.setItem(key, JSON.stringify(data));
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (error) {
+      console.warn('Workspace data could not be saved locally.', error);
+    }
   }
 
   function addAudit(data, action, target) {
@@ -245,10 +254,24 @@ async function renderWorkspacePage() {
       <tbody>${rows.map(row => `
         <tr>
           ${config.columns.map(col => `<td>${row[col] ?? ''}</td>`).join('')}
-          <td><button class="btn btn-ghost" data-mark-done="${row.id}">Mark reviewed</button></td>
+          <td><button class="btn btn-ghost" type="button" data-mark-done="${row.id}">Mark reviewed</button></td>
         </tr>
       `).join('')}</tbody>
     `;
+
+    const wrapper = table.closest('.table-wrapper');
+    if (wrapper && !wrapper.previousElementSibling?.classList?.contains('table-toolbar')) {
+      const toolbar = document.createElement('div');
+      toolbar.className = 'table-toolbar';
+      toolbar.innerHTML = '<input class="table-search" type="search" placeholder="Search records..." aria-label="Search records">';
+      wrapper.parentElement.insertBefore(toolbar, wrapper);
+      toolbar.querySelector('input').addEventListener('input', event => {
+        const query = event.target.value.trim().toLowerCase();
+        table.querySelectorAll('tbody tr').forEach(row => {
+          row.hidden = query && !row.textContent.toLowerCase().includes(query);
+        });
+      });
+    }
 
     table.querySelectorAll('[data-mark-done]').forEach(button => {
       button.addEventListener('click', async () => {

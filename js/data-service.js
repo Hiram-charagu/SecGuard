@@ -148,18 +148,35 @@ class DataManager {
   constructor(config = {}) {
     this.config = { ...DataServiceConfig, ...config };
     this.data = clonePlatformData(seedPlatformData);
+    this.storageAvailable = true;
+    this.lastError = null;
   }
 
   async load() {
-    const saved = localStorage.getItem(this.config.storageKey);
-    this.data = saved ? JSON.parse(saved) : clonePlatformData(seedPlatformData);
-    this.normalizeDates();
-    this.save();
+    try {
+      const saved = localStorage.getItem(this.config.storageKey);
+      this.data = saved ? JSON.parse(saved) : clonePlatformData(seedPlatformData);
+      this.normalizeDates();
+      this.save();
+    } catch (error) {
+      this.storageAvailable = false;
+      this.lastError = error;
+      this.data = clonePlatformData(seedPlatformData);
+      this.normalizeDates();
+      console.warn('Secguard storage is unavailable. Running in memory-only mode.', error);
+    }
     return this.data;
   }
 
   save() {
-    localStorage.setItem(this.config.storageKey, JSON.stringify(this.serialize()));
+    if (!this.storageAvailable) return;
+    try {
+      localStorage.setItem(this.config.storageKey, JSON.stringify(this.serialize()));
+    } catch (error) {
+      this.storageAvailable = false;
+      this.lastError = error;
+      console.warn('Secguard could not save to local storage. Continuing in memory-only mode.', error);
+    }
   }
 
   serialize() {
@@ -389,7 +406,10 @@ class DataManager {
   }
 
   formatIMEI(imei) {
-    return imei ? String(imei).replace(/\s/g, '').match(/.{1,4}/g).join(' ') : 'N/A';
+    const raw = imei ? String(imei).replace(/\s/g, '') : '';
+    if (!raw) return 'N/A';
+    const groups = raw.match(/.{1,4}/g);
+    return groups ? groups.join(' ') : raw;
   }
 
   getRiskLevel(score) {

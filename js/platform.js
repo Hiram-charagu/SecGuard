@@ -3,50 +3,23 @@ const currentPage = document.body.dataset.page;
 const state = {
   sidebarOpen: false,
   liveSimulation: false,
-};
-
-const roleRoutes = {
-  super_admin: 'organizations.html',
-  company_admin: 'dashboard.html',
-  security_officer: 'fraud.html',
-  investigator: 'recovery-cases.html',
-  sales_staff: 'device-intelligence.html',
-  customer: 'customer.html',
-};
-
-const roleAccess = {
-  super_admin: ['dashboard.html', 'organizations.html', 'branches.html', 'staff.html', 'device-intelligence.html', 'erp-connector.html', 'fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'analytics.html', 'audit-logs.html', 'security-policies.html', 'settings.html'],
-  company_admin: ['dashboard.html', 'branches.html', 'staff.html', 'device-intelligence.html', 'erp-connector.html', 'fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'analytics.html', 'audit-logs.html', 'security-policies.html', 'settings.html'],
-  security_officer: ['fraud.html', 'theft-reports.html', 'recovery-cases.html', 'tracking.html', 'customer.html', 'audit-logs.html'],
-  investigator: ['recovery-cases.html', 'theft-reports.html', 'tracking.html', 'customer.html', 'audit-logs.html'],
-  sales_staff: ['device-intelligence.html', 'customer.html', 'tracking.html'],
-  customer: ['customer.html', 'tracking.html'],
+  trackingMap: null,
+  trackingMarkers: [],
 };
 
 function getActiveRole() {
-  return localStorage.getItem('secguard_active_role') || 'company_admin';
-}
-
-function getCurrentFile() {
-  return location.pathname.split('/').pop() || 'index.html';
+  return window.SecguardAuth?.getRole() || 'company_admin';
 }
 
 function enforceRoleAccess() {
   if (currentPage === 'login') return true;
-  const role = getActiveRole();
-  const allowed = roleAccess[role] || roleAccess.company_admin;
-  const currentFile = getCurrentFile();
-  if (!allowed.includes(currentFile)) {
-    location.href = roleRoutes[role] || 'dashboard.html';
-    return false;
-  }
-  return true;
+  return window.SecguardAuth ? SecguardAuth.enforce() : true;
 }
 
 function applyRoleNavigation() {
   if (currentPage === 'login') return;
-  const role = getActiveRole();
-  const allowed = roleAccess[role] || roleAccess.company_admin;
+  if (!window.SecguardAuth) return;
+  const allowed = SecguardAuth.allowedPages();
   document.querySelectorAll('.nav-group a').forEach(link => {
     const href = link.getAttribute('href');
     if (href && !allowed.includes(href)) link.remove();
@@ -75,6 +48,33 @@ function getVisibleDevices() {
   const devices = dataManager.getDevices();
   if (getActiveRole() !== 'customer') return devices;
   return devices.filter(device => device.customer_owned);
+}
+
+function showToast(message) {
+  let stack = document.querySelector('.toast-stack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.className = 'toast-stack';
+    document.body.appendChild(stack);
+  }
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  stack.appendChild(toast);
+  setTimeout(() => toast.remove(), 3600);
+}
+
+function showFatalError(error) {
+  console.error(error);
+  const shell = document.querySelector('.main-shell') || document.body;
+  const panel = document.createElement('div');
+  panel.className = 'card';
+  panel.style.margin = '22px';
+  panel.innerHTML = `
+    <div class="top-bar"><div><small>System error</small><strong>Secguard could not render this view</strong></div></div>
+    <p>${error?.message || 'An unexpected error occurred while loading this workspace.'}</p>
+  `;
+  shell.prepend(panel);
 }
 
 function getVisibleCustomers() {
@@ -115,11 +115,16 @@ async function simulateLiveTelemetry() {
     timestamp: newTimestamp,
   });
 
+  if (newSync === 'desynced' || newRisk > 80) {
+    showToast(`Security event: ${device.model} risk changed to ${newRisk}.`);
+  }
+
   renderAllPages();
 }
 
 function startLiveSimulation() {
   if (state.liveSimulation) return;
+  if (!['dashboard', 'device-intelligence', 'fraud', 'tracking', 'customer', 'analytics'].includes(currentPage)) return;
   state.liveSimulation = true;
   simulateLiveTelemetry();
   setInterval(simulateLiveTelemetry, 6500);
@@ -458,8 +463,12 @@ function renderCustomerPortal() {
  */
 function renderAuditLogs() {
   if (currentPage !== 'audit-logs') return;
-  
-  const localWorkspace = JSON.parse(localStorage.getItem('secguard_workspace_v1') || '{"auditLogs":[]}');
+  let localWorkspace = { auditLogs: [] };
+  try {
+    localWorkspace = JSON.parse(localStorage.getItem('secguard_workspace_v1') || '{"auditLogs":[]}');
+  } catch (error) {
+    console.warn('Workspace audit logs could not be read.', error);
+  }
   const localLogs = (localWorkspace.auditLogs || []).map(log => ({
     time: new Date(log.time),
     actor: log.actor,
@@ -473,7 +482,10 @@ function renderAuditLogs() {
   if (auditTable) {
     auditTable.innerHTML = logs.map(log => `
       <tr>
-        <td>${dataManager.formatDate(log.time).includes('ago') ? new Date().toLocaleTimeString().slice(0, 5) + ' &bull; ' + log.time.toLocaleDateString() : log.time.toLocaleTimeString()}</td>
+        <td>${(() => {
+          const time = log.time instanceof Date ? log.time : new Date(log.time);
+          return `${time.toLocaleTimeString().slice(0, 5)} &bull; ${time.toLocaleDateString()}`;
+        })()}</td>
         <td>${log.actor}</td>
         <td>${log.action}</td>
         <td>${log.target}</td>
@@ -597,24 +609,28 @@ function initNotifications() {
 function initLoginForm() {
   const form = document.querySelector('.login-form');
   if (!form) return;
-  let selectedRole = localStorage.getItem('secguard_active_role') || 'company_admin';
+  let selectedRole = window.SecguardAuth?.getRole() || 'company_admin';
 
   function enterRole(role) {
-    localStorage.setItem('secguard_active_role', role || 'company_admin');
-    localStorage.setItem('secguard_demo_session', 'true');
-    const route = window.SecguardSupabase?.routeForRole(role) || roleRoutes[role] || 'dashboard.html';
+    if (window.SecguardAuth) SecguardAuth.setRole(role);
+    try {
+      localStorage.setItem('secguard_demo_session', 'true');
+    } catch (error) {
+      console.warn('Could not persist demo session flag.', error);
+    }
+    const route = window.SecguardSupabase?.routeForRole(role) || window.SecguardAuth?.routeForRole(role) || 'dashboard.html';
     window.location.href = route;
   }
 
   const roleSelect = document.querySelector('[data-role-select]');
   const params = new URLSearchParams(window.location.search);
   selectedRole = params.get('role') || selectedRole;
-  localStorage.setItem('secguard_active_role', selectedRole);
+  if (window.SecguardAuth) SecguardAuth.setRole(selectedRole);
   if (roleSelect) {
     roleSelect.value = selectedRole;
     roleSelect.addEventListener('change', () => {
       selectedRole = roleSelect.value;
-      localStorage.setItem('secguard_active_role', selectedRole);
+      if (window.SecguardAuth) SecguardAuth.setRole(selectedRole);
     });
   }
 
@@ -781,6 +797,64 @@ function getTrackingSignalStrength(score) {
   return 1;
 }
 
+function initTableSearch() {
+  document.querySelectorAll('.table-wrapper').forEach((wrapper, index) => {
+    const table = wrapper.querySelector('table');
+    if (!table || wrapper.previousElementSibling?.classList?.contains('table-toolbar')) return;
+    const toolbar = document.createElement('div');
+    toolbar.className = 'table-toolbar';
+    toolbar.innerHTML = `<input class="table-search" type="search" placeholder="Search table..." aria-label="Search table ${index + 1}">`;
+    wrapper.parentElement.insertBefore(toolbar, wrapper);
+    const input = toolbar.querySelector('input');
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      table.querySelectorAll('tbody tr').forEach(row => {
+        row.hidden = query && !row.textContent.toLowerCase().includes(query);
+      });
+    });
+  });
+}
+
+function getDeviceCoordinates(device, index) {
+  const base = [
+    [-1.286389, 36.817223],
+    [-1.265, 36.804],
+    [-1.303, 36.826],
+    [-1.292, 36.78],
+    [-1.25, 36.89],
+  ];
+  const point = base[index % base.length];
+  const jitter = (Number(device.risk_score || 0) % 9) / 1000;
+  return [point[0] + jitter, point[1] - jitter];
+}
+
+function renderTrackingMap(devices) {
+  const mapNode = document.getElementById('tracking-map');
+  if (!mapNode || typeof L === 'undefined') return;
+  const fallbackCenter = [-1.286389, 36.817223];
+  if (!state.trackingMap) {
+    state.trackingMap = L.map(mapNode, { zoomControl: true }).setView(fallbackCenter, 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap',
+    }).addTo(state.trackingMap);
+    setTimeout(() => state.trackingMap.invalidateSize(), 80);
+  }
+
+  state.trackingMarkers.forEach(marker => marker.remove());
+  state.trackingMarkers = devices.map((device, index) => {
+    const coords = getDeviceCoordinates(device, index);
+    return L.marker(coords)
+      .addTo(state.trackingMap)
+      .bindPopup(`<strong>${device.model}</strong><br>${dataManager.formatIMEI(device.imei)}<br>${device.routeStatus}`);
+  });
+
+  if (state.trackingMarkers.length) {
+    const bounds = L.latLngBounds(state.trackingMarkers.map(marker => marker.getLatLng()));
+    state.trackingMap.fitBounds(bounds, { padding: [28, 28], maxZoom: 14 });
+  }
+}
+
 function renderTrackingPage() {
   if (currentPage !== 'tracking') return;
   
@@ -811,6 +885,8 @@ function renderTrackingPage() {
   const averageSignal = devices.length
     ? Math.round(devices.reduce((sum, device) => sum + device.signalStrength, 0) / devices.length)
     : 0;
+
+  renderTrackingMap(devices);
 
   if (trackingKpiGrid) {
     const kpis = [
@@ -1054,40 +1130,45 @@ function initAnalyticsActions() {
 }
 
 async function initPage() {
-  initSidebarToggle();
-  initLoginForm();
+  try {
+    initSidebarToggle();
+    initLoginForm();
 
-  if (!enforceRoleAccess()) return;
-  applyRoleNavigation();
+    if (!enforceRoleAccess()) return;
+    applyRoleNavigation();
 
-  if (typeof dataManager === 'undefined') return;
+    if (typeof dataManager === 'undefined') return;
 
-  await dataManager.load();
+    await dataManager.load();
+    if (!dataManager.storageAvailable) showToast('Storage is unavailable. Running in memory-only demo mode.');
 
-  initCharts();
-  initNotifications();
-  initDeviceForm();
-  initTrackingRefresh();
-  initDashboardActions();
-  initFraudActions();
-  initCustomerActions();
-  initSettingsActions();
-  initAnalyticsActions();
-  initActiveNav();
+    initCharts();
+    initNotifications();
+    initDeviceForm();
+    initTrackingRefresh();
+    initDashboardActions();
+    initFraudActions();
+    initCustomerActions();
+    initSettingsActions();
+    initAnalyticsActions();
+    initActiveNav();
+    initTableSearch();
 
-  // Render page-specific data
-  renderDashboardKPIs();
-  renderDashboardBranches();
-  renderDashboardAlerts();
-  renderDeviceIntelligence();
-  renderFraudDetection();
-  renderCustomerPortal();
-  renderAuditLogs();
-  renderAnalyticsPage();
-  renderTrackingPage();
-  renderSettingsPage();
+    renderDashboardKPIs();
+    renderDashboardBranches();
+    renderDashboardAlerts();
+    renderDeviceIntelligence();
+    renderFraudDetection();
+    renderCustomerPortal();
+    renderAuditLogs();
+    renderAnalyticsPage();
+    renderTrackingPage();
+    renderSettingsPage();
 
-  startLiveSimulation();
+    startLiveSimulation();
+  } catch (error) {
+    showFatalError(error);
+  }
 }
 
 window.addEventListener('DOMContentLoaded', initPage);

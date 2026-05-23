@@ -3,31 +3,22 @@ const SecguardSupabase = (() => {
   const hasClient = Boolean(window.supabase && config.url && config.anonKey);
   const client = hasClient ? window.supabase.createClient(config.url, config.anonKey) : null;
 
-  const roleRoutes = {
-    super_admin: 'organizations.html',
-    company_admin: 'dashboard.html',
-    security_officer: 'fraud.html',
-    investigator: 'recovery-cases.html',
-    sales_staff: 'device-intelligence.html',
-    customer: 'customer.html',
-  };
-
   function enabled() {
     return Boolean(config.enabled && client);
   }
 
   function routeForRole(role) {
-    return roleRoutes[role] || 'dashboard.html';
+    return window.SecguardAuth?.routeForRole(role) || 'dashboard.html';
   }
 
   async function login(email, password, role) {
-    localStorage.setItem('secguard_active_role', role || 'company_admin');
+    window.SecguardAuth?.setRole(role || 'company_admin');
     if (!client) return { data: null, error: null, local: true };
     return client.auth.signInWithPassword({ email, password });
   }
 
   async function signup(email, password, role) {
-    localStorage.setItem('secguard_active_role', role || 'company_admin');
+    window.SecguardAuth?.setRole(role || 'company_admin');
     if (!client) return { data: null, error: null, local: true };
     return client.auth.signUp({
       email,
@@ -37,7 +28,7 @@ const SecguardSupabase = (() => {
   }
 
   async function googleLogin(role) {
-    localStorage.setItem('secguard_active_role', role || 'company_admin');
+    window.SecguardAuth?.setRole(role || 'company_admin');
     if (!client) return { error: new Error('Supabase client is not available') };
     return client.auth.signInWithOAuth({
       provider: 'google',
@@ -46,7 +37,11 @@ const SecguardSupabase = (() => {
   }
 
   async function logout() {
-    localStorage.removeItem('secguard_active_role');
+    try {
+      localStorage.removeItem('secguard_active_role');
+    } catch (error) {
+      console.warn('Could not clear local Secguard role.', error);
+    }
     if (client) await client.auth.signOut();
     window.location.href = 'login.html';
   }

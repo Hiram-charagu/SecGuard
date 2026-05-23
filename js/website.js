@@ -37,7 +37,13 @@ function initPortalRoleLinks() {
     link.addEventListener('click', () => {
       const url = new URL(link.href, window.location.href);
       const role = url.searchParams.get('role');
-      if (role) localStorage.setItem('secguard_active_role', role);
+      if (role) {
+        try {
+          localStorage.setItem('secguard_active_role', role);
+        } catch (error) {
+          console.warn('Could not persist selected portal role.', error);
+        }
+      }
     });
   });
 }

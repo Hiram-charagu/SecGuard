@@ -82,6 +82,16 @@ nav a span {
   font-size: 0.95rem;
 }
 
+.menu-toggle {
+  display: none;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  padding: 10px 12px;
+  font-weight: 800;
+}
+
 .sidebar-footer {
   margin-top: auto;
   display: grid;
@@ -341,6 +351,47 @@ nav a span {
   font-size: 0.95rem;
 }
 
+#tracking-map {
+  width: 100%;
+  min-height: 420px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(115, 243, 232, 0.16);
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 14px;
+}
+
+.table-search {
+  width: min(340px, 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(16, 22, 39, 0.96);
+  color: var(--text);
+  padding: 12px 14px;
+}
+
+.toast-stack {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 100;
+  display: grid;
+  gap: 10px;
+}
+
+.toast {
+  border: 1px solid rgba(115, 243, 232, 0.2);
+  border-radius: 16px;
+  background: rgba(7, 13, 27, 0.94);
+  color: var(--text);
+  padding: 12px 14px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.32);
+}
+
 .table-wrapper {
   overflow-x: auto;
 }
@@ -525,6 +576,18 @@ tbody tr:hover {
     position: relative;
     height: auto;
     border-right: none;
+  }
+  .sidebar .nav-group,
+  .sidebar .sidebar-footer {
+    display: none;
+  }
+  .sidebar.sidebar-open .nav-group,
+  .sidebar.sidebar-open .sidebar-footer {
+    display: grid;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    justify-content: center;
   }
   .main-shell {
     padding: 22px;
