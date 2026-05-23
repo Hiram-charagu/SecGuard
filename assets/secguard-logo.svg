@@ -116,7 +116,7 @@
   <!-- Scan line across shield -->
   <rect x="100" y="104" width="110" height="1.5" fill="url(#scanGrad)" opacity="0.7"/>
 
-  <!-- ===== CENTRAL ICON — circuit-node eye / monitor symbol ===== -->
+  <!-- ===== CENTRAL ICON - circuit-node eye / monitor symbol ===== -->
   <!-- Outer ring -->
   <circle cx="155" cy="103" r="28" fill="none" stroke="#00e5ff" stroke-width="1.4"
           stroke-dasharray="6 3" opacity="0.5" filter="url(#iconGlow)"/>
@@ -189,7 +189,7 @@
         opacity="0.75">SYSTEM ACTIVE</text>
 
   <!-- Version badge -->
-  <rect x="508" y="148" width="46" height="16" rx="3" fill="#00e5ff" opacity="0.08" stroke="#00e5ff" stroke-width="0.6" opacity="0.3"/>
+  <rect x="508" y="148" width="46" height="16" rx="3" fill="#00e5ff" fill-opacity="0.08" stroke="#00e5ff" stroke-width="0.6" stroke-opacity="0.3"/>
   <text x="513" y="160"
         font-family="monospace"
         font-size="8.5"
