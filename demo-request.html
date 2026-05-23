@@ -6,97 +6,52 @@
   <title>Secguard | Demo Request</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/website.css" />
 </head>
 <body data-page="website">
   <header class="site-header">
-    <a class="brand" href="index.html"><img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" /></a>
+    <a class="brand site-brand" href="index.html" aria-label="Secguard home"><span class="brand-shield" aria-hidden="true"></span><strong>Secguard</strong></a>
     <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
     <nav class="site-nav" aria-label="Public navigation">
-      <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-      <a href="about.html">About</a>
-      <a href="features.html">Services</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="security.html">Security</a>
-      <a href="contact.html">Contact</a>
+      <a href="portals.html">Portals</a><a href="features.html">Platform</a><a href="security.html">Security</a><a href="pricing.html">Pricing</a><a href="about.html">Company</a><a href="contact.html">Contact</a>
     </nav>
-    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Request demo</a></div>
+    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Book walkthrough</a></div>
   </header>
 
   <main class="site-page">
-    <section class="split-section">
+    <section class="split-section reveal">
       <div>
         <span class="eyebrow">Demo request</span>
-        <h1>Plan the first production rollout.</h1>
-        <p>This request captures the implementation details that matter: ERP type, branches, device volume, mobile app timeline, and security priorities.</p>
+        <h1>See Secguard with your ERP connected.</h1>
+        <p>This request captures the details that matter for rollout: ERP type, branch count, device volume, mobile app timeline, and the security workflows you want to test first.</p>
+        <div class="mission-grid compact-mission">
+          <article><small>Step 1</small><strong>Map ERP events</strong><p>Inventory, sales, transfers, customers, and warranties.</p></article>
+          <article><small>Step 2</small><strong>Seed device records</strong><p>IMEI registry, branch status, fraud baselines.</p></article>
+          <article><small>Step 3</small><strong>Test recovery</strong><p>Theft report, telemetry, investigation, and export.</p></article>
+        </div>
       </div>
-      <form class="site-form">
+      <form class="site-form elevated-form reveal">
         <div class="input-group"><label for="company">Company</label><input id="company" type="text" required></div>
-        <div class="input-group"><label for="work-email">Work Email</label><input id="work-email" type="email" required></div>
-        <div class="input-group"><label for="device-volume">Monthly Device Volume</label><select id="device-volume" required><option value="">Select volume</option><option>Under 500</option><option>500 - 5,000</option><option>5,000 - 25,000</option><option>25,000+</option></select></div>
-        <div class="input-group"><label for="erp">ERP System</label><input id="erp" type="text" placeholder="MAPPHEX, custom ERP, Odoo, SAP, etc."></div>
-        <div class="input-group"><label for="notes">Main Goal</label><textarea id="notes" placeholder="Fraud detection, customer protection, recovery, or all components"></textarea></div>
+        <div class="input-group"><label for="work-email">Work email</label><input id="work-email" type="email" required></div>
+        <div class="input-group"><label for="branches">Branches</label><select id="branches" required><option value="">Select branches</option><option>1 branch</option><option>2 - 5 branches</option><option>6 - 20 branches</option><option>20+ branches</option></select></div>
+        <div class="input-group"><label for="device-volume">Monthly device volume</label><select id="device-volume" required><option value="">Select volume</option><option>Under 500</option><option>500 - 5,000</option><option>5,000 - 25,000</option><option>25,000+</option></select></div>
+        <div class="input-group"><label for="erp">ERP system</label><input id="erp" type="text" placeholder="MAPPHEX, Odoo, custom ERP, SAP, etc."></div>
+        <div class="input-group"><label for="notes">Main goal</label><textarea id="notes" placeholder="Fraud detection, customer protection, recovery, or all components"></textarea></div>
         <button class="btn" type="submit">Submit demo request</button>
       </form>
     </section>
   </main>
-  <footer class="site-footer textured-footer">
-    <div class="footer-grid footer-mega-grid">
-      <div class="footer-column">
-        <h3>Explore Secguard</h3>
-        <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-        <span>Device Intelligence</span>
-        <span>Fraud Protection</span>
-        <span>Realtime Tracking</span>
-      </div>
-      <div class="footer-column">
-        <h3>Company</h3>
-        <a href="about.html">About Us</a>
-        <a href="security.html">Security Model</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="footer-column">
-        <h3>Resources</h3>
-        <a href="README.md">Documentation</a>
-        <a href="ARCHITECTURE.md">Platform Architecture</a>
-        <a href="demo-request.html">Implementation Plan</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-      </div>
-      <div class="footer-column">
-        <h3>Community</h3>
-        <a href="contact.html">Customer Support</a>
-        <a href="contact.html">Partner Network</a>
-        <a href="demo-request.html">Request Demo</a>
-        <a href="login.html">Organization Login</a>
-      </div>
-    </div>
 
-    <div class="footer-statement">
-      <p>Register an organization, connect the ERP, enroll devices, monitor fraud signals, and open the matching security workspace tools.</p>
-      <p>Manage branches, staff, customers, inventory sync, warranties, theft cases, device telemetry, alerts, investigations, and audit reports.</p>
-      <p>Control access with roles, permissions, secure records, realtime activity, recovery workflows, and enterprise security policies.</p>
+  <footer class="site-footer refined-home-footer">
+    <div class="footer-grid refined-footer-grid">
+      <div class="footer-brand"><img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" /><p>Device intelligence and fraud protection for phone-selling companies connected to ERP workflows.</p><div class="social-row"><a href="#">f</a><a href="#">in</a><a href="#">ig</a><a href="#">X</a></div></div>
+      <div class="footer-column"><h3>Platform</h3><a href="portals.html">Portals</a><a href="login.html?role=company_admin">Dashboard</a><a href="login.html?role=security_officer">Fraud Center</a><a href="login.html?role=customer">Customer Protection</a></div>
+      <div class="footer-column"><h3>Company</h3><a href="about.html">About</a><a href="features.html">Platform</a><a href="security.html">Security</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></div>
+      <div class="footer-column trust-column"><h3>Trust</h3><span>SOC 2 ready</span><span>GDPR aware</span><span>Encrypted at rest</span><span>Audit log first</span></div>
     </div>
-
-    <div class="footer-social">
-      <h3>Follow Us</h3>
-      <div class="social-row" aria-label="Social links">
-        <a href="#" aria-label="Facebook">f</a>
-        <a href="#" aria-label="LinkedIn">in</a>
-        <a href="#" aria-label="Instagram">ig</a>
-        <a href="#" aria-label="X">X</a>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <span>&copy; 2026 Secguard. Enterprise device intelligence and fraud protection.</span>
-      <span>Built for ERP integration, audit trails, and recovery operations.</span>
-    </div>
+    <div class="footer-bottom"><span>&copy; 2026 Secguard.</span><span>ERP sync. Device telemetry. Fraud rules. Recovery workflows.</span></div>
   </footer>
   <script src="js/website.js"></script>
 </body>

@@ -3,99 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secguard | Features</title>
+  <title>Secguard | Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/website.css" />
 </head>
 <body data-page="website">
   <header class="site-header">
-    <a class="brand" href="index.html"><img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" /></a>
+    <a class="brand site-brand" href="index.html" aria-label="Secguard home"><span class="brand-shield" aria-hidden="true"></span><strong>Secguard</strong></a>
     <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
     <nav class="site-nav" aria-label="Public navigation">
-      <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-      <a href="about.html">About</a>
-      <a href="features.html">Services</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="security.html">Security</a>
-      <a href="contact.html">Contact</a>
+      <a href="portals.html">Portals</a><a href="features.html">Platform</a><a href="security.html">Security</a><a href="pricing.html">Pricing</a><a href="about.html">Company</a><a href="contact.html">Contact</a>
     </nav>
-    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Request demo</a></div>
+    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Book walkthrough</a></div>
   </header>
 
   <main class="site-page">
-    <section class="section-heading">
-      <span class="eyebrow">Services and modules</span>
-      <h1>Everything needed to connect ERP records, devices, fraud signals, and customer recovery.</h1>
-      <p>Each module is designed as a production component that can be debugged, tested, and extended independently.</p>
+    <section class="page-hero reveal">
+      <div>
+        <span class="eyebrow">Platform modules</span>
+        <h1>One security layer. Four engines.</h1>
+        <p>Secguard connects ERP events, device intelligence, fraud rules, and customer protection into a system that can be tested, debugged, and extended module by module.</p>
+      </div>
+      <div class="mini-engine-card">
+        <span>ERP Sync</span><span>Device Graph</span><span>Fraud Rules</span><span>Recovery Desk</span>
+      </div>
     </section>
 
-    <section class="feature-grid">
-      <article class="feature-card"><small>Registry</small><h3>Device Registry</h3><p>Canonical record for IMEI, serial number, model, supplier, branch, ERP status, owner, and warranty.</p></article>
-      <article class="feature-card"><small>Sync</small><h3>ERP Connector</h3><p>Imports inventory, sales, receipts, staff, branches, and ownership changes through webhooks or scheduled jobs.</p></article>
-      <article class="feature-card"><small>Mobile</small><h3>Device Client</h3><p>Flutter app for customer enrollment, consent, telemetry, theft reports, SIM/network events, and warranty access.</p></article>
-      <article class="feature-card"><small>Security</small><h3>Fraud Rules</h3><p>Detects unsold active devices, duplicate identifiers, stock mismatches, staff anomalies, and repeated SIM changes.</p></article>
-      <article class="feature-card"><small>Ops</small><h3>Investigations</h3><p>Assign alerts, collect evidence, track case status, add officer notes, and close incidents with audit history.</p></article>
-      <article class="feature-card"><small>Realtime</small><h3>Tracking Center</h3><p>Displays last seen state, approximate location, app integrity, online status, and recovery monitoring events.</p></article>
+    <section class="feature-bento reveal">
+      <article class="feature-card bento-large accent-cyan"><small>Device Intelligence</small><h3>The registry is the heart of the platform.</h3><p>IMEI, serial number, model, branch, ERP status, activation status, SIM changes, owner, warranty, telemetry, and risk score stay tied together.</p></article>
+      <article class="feature-card accent-purple"><small>ERP Connector</small><h3>Business truth in.</h3><p>Inventory, sales, receipts, branch transfers, warranties, staff, and customer records arrive through webhooks or scheduled sync.</p></article>
+      <article class="feature-card accent-red"><small>Fraud Detection</small><h3>Rules that catch leakage.</h3><p>Unsold active phones, duplicate identifiers, receipt gaps, SIM abuse, and branch mismatch become prioritized alerts.</p></article>
+      <article class="feature-card accent-blue"><small>Live Tracking</small><h3>Last-seen intelligence.</h3><p>Location pings, network type, carrier, battery, SIM hash, and timestamps feed maps and recovery workflows.</p></article>
+      <article class="feature-card accent-green"><small>Customer Protection</small><h3>Recovery starts cleanly.</h3><p>Customers register devices, report theft, view warranty, and follow recovery progress without calling five departments.</p></article>
+      <article class="feature-card accent-amber"><small>Audit + Reports</small><h3>Operational truth out.</h3><p>Every action writes an audit trail and exports reports for managers, officers, and compliance review.</p></article>
+    </section>
+
+    <section class="workflow-section reveal">
+      <div class="section-heading"><span class="eyebrow">Data flow</span><h2>From ERP event to fraud action.</h2></div>
+      <div class="workflow-line">
+        <article><span>1</span><strong>ERP sends event</strong><p>Stock, sale, transfer, warranty, or receipt data enters Secguard.</p></article>
+        <article><span>2</span><strong>Device profile updates</strong><p>The registry refreshes ownership, branch, status, and risk context.</p></article>
+        <article><span>3</span><strong>Telemetry arrives</strong><p>The mobile app or API sends consent-based device events.</p></article>
+        <article><span>4</span><strong>Rules evaluate</strong><p>Fraud logic detects mismatches and suspicious device movement.</p></article>
+        <article><span>5</span><strong>Officers act</strong><p>Alerts become investigations, recovery cases, reports, or audit events.</p></article>
+      </div>
     </section>
   </main>
-  <footer class="site-footer textured-footer">
-    <div class="footer-grid footer-mega-grid">
-      <div class="footer-column">
-        <h3>Explore Secguard</h3>
-        <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-        <span>Device Intelligence</span>
-        <span>Fraud Protection</span>
-        <span>Realtime Tracking</span>
-      </div>
-      <div class="footer-column">
-        <h3>Company</h3>
-        <a href="about.html">About Us</a>
-        <a href="security.html">Security Model</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="footer-column">
-        <h3>Resources</h3>
-        <a href="README.md">Documentation</a>
-        <a href="ARCHITECTURE.md">Platform Architecture</a>
-        <a href="demo-request.html">Implementation Plan</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-      </div>
-      <div class="footer-column">
-        <h3>Community</h3>
-        <a href="contact.html">Customer Support</a>
-        <a href="contact.html">Partner Network</a>
-        <a href="demo-request.html">Request Demo</a>
-        <a href="login.html">Organization Login</a>
-      </div>
-    </div>
 
-    <div class="footer-statement">
-      <p>Register an organization, connect the ERP, enroll devices, monitor fraud signals, and open the matching security workspace tools.</p>
-      <p>Manage branches, staff, customers, inventory sync, warranties, theft cases, device telemetry, alerts, investigations, and audit reports.</p>
-      <p>Control access with roles, permissions, secure records, realtime activity, recovery workflows, and enterprise security policies.</p>
+  <footer class="site-footer refined-home-footer">
+    <div class="footer-grid refined-footer-grid">
+      <div class="footer-brand"><img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" /><p>Device intelligence and fraud protection for phone-selling companies connected to ERP workflows.</p><div class="social-row"><a href="#">f</a><a href="#">in</a><a href="#">ig</a><a href="#">X</a></div></div>
+      <div class="footer-column"><h3>Platform</h3><a href="portals.html">Portals</a><a href="login.html?role=company_admin">Dashboard</a><a href="login.html?role=security_officer">Fraud Center</a><a href="login.html?role=customer">Customer Protection</a></div>
+      <div class="footer-column"><h3>Company</h3><a href="about.html">About</a><a href="features.html">Platform</a><a href="security.html">Security</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></div>
+      <div class="footer-column trust-column"><h3>Trust</h3><span>SOC 2 ready</span><span>GDPR aware</span><span>Encrypted at rest</span><span>Audit log first</span></div>
     </div>
-
-    <div class="footer-social">
-      <h3>Follow Us</h3>
-      <div class="social-row" aria-label="Social links">
-        <a href="#" aria-label="Facebook">f</a>
-        <a href="#" aria-label="LinkedIn">in</a>
-        <a href="#" aria-label="Instagram">ig</a>
-        <a href="#" aria-label="X">X</a>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <span>&copy; 2026 Secguard. Enterprise device intelligence and fraud protection.</span>
-      <span>Built for ERP integration, audit trails, and recovery operations.</span>
-    </div>
+    <div class="footer-bottom"><span>&copy; 2026 Secguard.</span><span>ERP sync. Device telemetry. Fraud rules. Recovery workflows.</span></div>
   </footer>
   <script src="js/website.js"></script>
 </body>

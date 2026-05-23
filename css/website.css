@@ -17,6 +17,205 @@ body[data-page="website"]::before {
   mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 72%);
 }
 
+.page-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .55fr);
+  gap: 28px;
+  align-items: stretch;
+  padding: 76px 0 42px;
+}
+
+.page-hero h1 {
+  margin: 0;
+  max-width: 900px;
+  font-size: clamp(3rem, 7vw, 6.6rem);
+  line-height: .9;
+  background: linear-gradient(120deg, #fff 8%, #c8f8ff 42%, #a98cff 88%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.page-hero p {
+  max-width: 740px;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+.page-signal-card,
+.mini-engine-card,
+.security-radar {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  align-content: end;
+  gap: 12px;
+  min-height: 330px;
+  border: 1px solid rgba(115, 243, 232, .16);
+  border-radius: 30px;
+  background:
+    linear-gradient(rgba(115, 243, 232, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 135, 255, 0.045) 1px, transparent 1px),
+    radial-gradient(circle at 50% 28%, rgba(91, 135, 255, .24), transparent 15rem),
+    rgba(7, 12, 24, .86);
+  background-size: 34px 34px, 34px 34px, auto, auto;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.page-signal-card::before,
+.mini-engine-card::before,
+.security-radar::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(115, 243, 232, .16);
+  border-radius: 24px;
+}
+
+.page-signal-card strong,
+.mini-engine-card strong,
+.security-radar strong {
+  font-size: 1.5rem;
+}
+
+.page-signal-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.mission-grid,
+.contact-stack {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mission-grid article,
+.contact-stack div {
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(115,243,232,.14), transparent 13rem),
+    rgba(10, 16, 33, .82);
+  box-shadow: var(--shadow);
+  padding: 19px;
+}
+
+.mission-grid small {
+  color: var(--accent-2);
+  font-weight: 900;
+}
+
+.mission-grid strong,
+.contact-stack strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.25rem;
+}
+
+.mission-grid p,
+.contact-stack span {
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.mini-engine-card {
+  align-content: center;
+}
+
+.mini-engine-card span {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  background: rgba(3, 7, 16, .62);
+  padding: 12px 14px;
+  color: #dbe8ff;
+  font-weight: 900;
+}
+
+.mini-engine-card span::after {
+  content: "active";
+  color: var(--accent-2);
+  font-size: .78rem;
+}
+
+.pricing-premium {
+  transform: translateY(-14px);
+  border-color: rgba(115, 243, 232, .32);
+  box-shadow: 0 34px 110px rgba(91, 135, 255, .2);
+}
+
+.pricing-card {
+  gap: 16px;
+}
+
+.pricing-card strong {
+  font-size: 1.1rem;
+  color: var(--accent-2);
+}
+
+.security-radar {
+  place-items: center;
+  align-content: center;
+}
+
+.security-radar span {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border: 1px solid rgba(115, 243, 232, .32);
+  border-radius: 999px;
+  animation: radarPulse 2.4s ease-in-out infinite;
+}
+
+.security-radar span:nth-child(2) {
+  width: 170px;
+  height: 170px;
+  animation-delay: .4s;
+}
+
+.security-radar span:nth-child(3) {
+  width: 250px;
+  height: 250px;
+  animation-delay: .8s;
+}
+
+.security-radar strong {
+  position: relative;
+  z-index: 1;
+  color: #eafcff;
+}
+
+.contact-stack,
+.compact-mission {
+  grid-template-columns: 1fr;
+  margin-top: 20px;
+}
+
+.contact-stack div,
+.compact-mission article {
+  padding: 14px;
+}
+
+.elevated-form {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(115, 243, 232, .16);
+  background:
+    radial-gradient(circle at top, rgba(91,135,255,.18), transparent 18rem),
+    rgba(10, 16, 33, .9);
+}
+
+@keyframes radarPulse {
+  0%, 100% { transform: scale(.92); opacity: .35; }
+  50% { transform: scale(1.08); opacity: .9; }
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -1616,8 +1815,13 @@ body[data-page="website"]::before {
 
   .workflow-line,
   .role-showcase,
-  .testimonial-grid {
+  .testimonial-grid,
+  .page-hero {
     grid-template-columns: 1fr;
+  }
+
+  .mission-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .workflow-line::before {
@@ -1671,7 +1875,8 @@ body[data-page="website"]::before {
   .dashboard-kpis,
   .device-showcase,
   .feature-grid-six,
-  .faq-grid {
+  .faq-grid,
+  .mission-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1740,6 +1945,7 @@ body[data-page="website"]::before {
 
   .marketing-hero,
   .home-hero,
+  .page-hero,
   .showcase-section,
   .dashboard-ad,
   .mobile-showcase,

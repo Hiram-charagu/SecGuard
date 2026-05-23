@@ -6,100 +6,72 @@
   <title>Secguard | About</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/website.css" />
 </head>
 <body data-page="website">
   <header class="site-header">
-    <a class="brand" href="index.html"><img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" /></a>
+    <a class="brand site-brand" href="index.html" aria-label="Secguard home"><span class="brand-shield" aria-hidden="true"></span><strong>Secguard</strong></a>
     <button class="site-menu-toggle" type="button" aria-label="Toggle navigation">Menu</button>
     <nav class="site-nav" aria-label="Public navigation">
-      <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-      <a href="about.html">About</a>
-      <a href="features.html">Services</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="security.html">Security</a>
-      <a href="contact.html">Contact</a>
+      <a href="portals.html">Portals</a><a href="features.html">Platform</a><a href="security.html">Security</a><a href="pricing.html">Pricing</a><a href="about.html">Company</a><a href="contact.html">Contact</a>
     </nav>
-    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Request demo</a></div>
+    <div class="site-actions"><a class="btn btn-ghost" href="login.html">Login</a><a class="btn" href="demo-request.html">Book walkthrough</a></div>
   </header>
 
   <main class="site-page">
-    <section class="section-heading">
-      <span class="eyebrow">About Secguard</span>
-      <h1>Built for retailers that need device security connected to real operations.</h1>
-      <p>Secguard extends an ERP ecosystem with device intelligence, customer protection, fraud detection, and recovery workflows. The goal is simple: every phone should have a clean lifecycle from stock entry to sale, ownership, protection, and recovery support.</p>
+    <section class="page-hero reveal">
+      <div>
+        <span class="eyebrow">About Secguard</span>
+        <h1>We make every phone accountable.</h1>
+        <p>Secguard exists because phone retailers need more than inventory records. They need to know when a device moves, activates, changes SIM, enters a theft case, or becomes evidence in a fraud investigation.</p>
+      </div>
+      <div class="page-signal-card">
+        <span class="live-dot"></span>
+        <strong>Device lifecycle secured</strong>
+        <p>Stock entry - sale - customer protection - recovery - audit trail.</p>
+      </div>
     </section>
 
-    <section class="split-section">
+    <section class="mission-grid reveal">
+      <article><small>01</small><strong>ERP-first</strong><p>Your ERP stays the business source of truth. Secguard adds the security layer around it.</p></article>
+      <article><small>02</small><strong>Device-aware</strong><p>IMEI, serial, warranty, branch, owner, SIM events, telemetry, and risk live in one record.</p></article>
+      <article><small>03</small><strong>Recovery-focused</strong><p>Theft reports turn into tracked recovery cases, not scattered messages and paper notes.</p></article>
+      <article><small>04</small><strong>Privacy-aware</strong><p>Monitoring is consent-based, role-limited, transparent, and designed for legitimate protection.</p></article>
+    </section>
+
+    <section class="split-section reveal">
       <div>
+        <span class="eyebrow">Operating model</span>
         <h2>A calm command layer for serious security work.</h2>
-        <p>The platform is designed around tenant isolation, branch-aware permissions, audit-ready actions, and consent-based mobile monitoring. It should feel organized enough for enterprise teams and clear enough for small retailers growing into better controls.</p>
+        <p>Secguard is structured around tenant isolation, branch-aware permissions, audit-ready actions, and mobile telemetry that can support real investigations without becoming invasive surveillance.</p>
       </div>
       <div class="architecture-list">
-        <div><strong>ERP-first</strong><span>Inventory and sales remain the business source of truth.</span></div>
-        <div><strong>Device-aware</strong><span>IMEI, serial number, warranty, ownership, telemetry, and risk live in one registry.</span></div>
-        <div><strong>Recovery-focused</strong><span>The system helps customers and security teams respond after theft reports.</span></div>
-        <div><strong>Privacy-aware</strong><span>Monitoring is transparent, permissioned, and limited to legitimate protection workflows.</span></div>
+        <div><strong>Company admins</strong><span>Control branches, staff, ERP sync, settings, and reports.</span></div>
+        <div><strong>Security officers</strong><span>Assign, escalate, dismiss, and close high-risk alerts.</span></div>
+        <div><strong>Investigators</strong><span>Work recovery timelines, SIM events, and device evidence.</span></div>
+        <div><strong>Customers</strong><span>Register protected devices and follow theft recovery status.</span></div>
       </div>
     </section>
+
+    <section class="closing-cta reveal">
+      <div class="cta-shield" aria-hidden="true"></div>
+      <span class="eyebrow">Platform direction</span>
+      <h2>Security software that follows the device, not just the sale.</h2>
+      <p>Connect the ERP, register devices, test fraud rules, and give every stakeholder the right portal.</p>
+      <div class="hero-actions"><a class="btn" href="demo-request.html">Book a walkthrough</a><a class="btn btn-ghost" href="portals.html">View portals</a></div>
+    </section>
   </main>
-  <footer class="site-footer textured-footer">
-    <div class="footer-grid footer-mega-grid">
-      <div class="footer-column">
-        <h3>Explore Secguard</h3>
-        <a href="index.html">Home</a>
-      <a href="portals.html">Portals</a>
-        <span>Device Intelligence</span>
-        <span>Fraud Protection</span>
-        <span>Realtime Tracking</span>
-      </div>
-      <div class="footer-column">
-        <h3>Company</h3>
-        <a href="about.html">About Us</a>
-        <a href="security.html">Security Model</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="footer-column">
-        <h3>Resources</h3>
-        <a href="README.md">Documentation</a>
-        <a href="ARCHITECTURE.md">Platform Architecture</a>
-        <a href="demo-request.html">Implementation Plan</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-      </div>
-      <div class="footer-column">
-        <h3>Community</h3>
-        <a href="contact.html">Customer Support</a>
-        <a href="contact.html">Partner Network</a>
-        <a href="demo-request.html">Request Demo</a>
-        <a href="login.html">Organization Login</a>
-      </div>
-    </div>
 
-    <div class="footer-statement">
-      <p>Register an organization, connect the ERP, enroll devices, monitor fraud signals, and open the matching security workspace tools.</p>
-      <p>Manage branches, staff, customers, inventory sync, warranties, theft cases, device telemetry, alerts, investigations, and audit reports.</p>
-      <p>Control access with roles, permissions, secure records, realtime activity, recovery workflows, and enterprise security policies.</p>
+  <footer class="site-footer refined-home-footer">
+    <div class="footer-grid refined-footer-grid">
+      <div class="footer-brand"><img class="brand-logo" src="assets/secguard-logo.svg" alt="Secguard" /><p>Device intelligence and fraud protection for phone-selling companies connected to ERP workflows.</p><div class="social-row"><a href="#">f</a><a href="#">in</a><a href="#">ig</a><a href="#">X</a></div></div>
+      <div class="footer-column"><h3>Platform</h3><a href="portals.html">Portals</a><a href="login.html?role=company_admin">Dashboard</a><a href="login.html?role=security_officer">Fraud Center</a><a href="login.html?role=customer">Customer Protection</a></div>
+      <div class="footer-column"><h3>Company</h3><a href="about.html">About</a><a href="features.html">Platform</a><a href="security.html">Security</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></div>
+      <div class="footer-column trust-column"><h3>Trust</h3><span>SOC 2 ready</span><span>GDPR aware</span><span>Encrypted at rest</span><span>Audit log first</span></div>
     </div>
-
-    <div class="footer-social">
-      <h3>Follow Us</h3>
-      <div class="social-row" aria-label="Social links">
-        <a href="#" aria-label="Facebook">f</a>
-        <a href="#" aria-label="LinkedIn">in</a>
-        <a href="#" aria-label="Instagram">ig</a>
-        <a href="#" aria-label="X">X</a>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <span>&copy; 2026 Secguard. Enterprise device intelligence and fraud protection.</span>
-      <span>Built for ERP integration, audit trails, and recovery operations.</span>
-    </div>
+    <div class="footer-bottom"><span>&copy; 2026 Secguard.</span><span>ERP sync. Device telemetry. Fraud rules. Recovery workflows.</span></div>
   </footer>
   <script src="js/website.js"></script>
 </body>
