@@ -496,16 +496,16 @@ body[data-page="website"] {
 .textured-footer {
   width: min(100% - 24px, 1800px);
   margin: 38px auto 0;
-  border: 1px solid rgba(91, 135, 255, 0.22);
+  border: 1px solid rgba(115, 243, 232, 0.22);
   border-radius: 34px 34px 0 0;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px),
-    radial-gradient(circle at 20% 0%, rgba(91, 135, 255, 0.13), transparent 32rem),
-    radial-gradient(circle at 82% 12%, rgba(115, 243, 232, 0.08), transparent 30rem),
-    #030914;
-  background-size: 42px 42px, 42px 42px, auto, auto, auto;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 -26px 90px rgba(0, 0, 0, 0.28);
+    linear-gradient(rgba(115, 243, 232, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 135, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 14% 0%, rgba(91, 135, 255, 0.32), transparent 30rem),
+    radial-gradient(circle at 86% 8%, rgba(217, 80, 255, 0.22), transparent 28rem),
+    linear-gradient(180deg, #061a31 0%, #05101f 42%, #020712 100%);
+  background-size: 38px 38px, 38px 38px, auto, auto, auto;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 -26px 90px rgba(0, 0, 0, 0.32), 0 0 70px rgba(91, 135, 255, 0.13);
   padding: 34px 30px 20px;
 }
 
@@ -525,31 +525,33 @@ body[data-page="website"] {
 }
 
 .textured-footer .footer-column h3 {
-  color: #c5cfdf;
+  color: #e7f7ff;
   font-size: 1.05rem;
   font-weight: 900;
+  text-shadow: 0 0 26px rgba(115, 243, 232, 0.18);
 }
 
 .textured-footer .footer-column a {
-  color: #9ba6b8;
+  color: #aebbd0;
   font-size: 1.02rem;
   font-weight: 800;
   transition: color 160ms ease, transform 160ms ease;
 }
 
 .textured-footer .footer-column a:hover {
-  color: #e7f7ff;
+  color: #73f3e8;
   transform: translateY(-1px);
 }
 
 .footer-statement {
   width: min(1028px, 100%);
   margin: 0 auto;
-  border-top: 1px solid rgba(148, 163, 184, 0.16);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  border-top: 1px solid rgba(115, 243, 232, 0.22);
+  border-bottom: 1px solid rgba(91, 135, 255, 0.22);
+  background: linear-gradient(90deg, transparent, rgba(91, 135, 255, 0.08), rgba(115, 243, 232, 0.06), transparent);
   padding: 28px 20px;
   text-align: center;
-  color: #96a3b7;
+  color: #b5c2d8;
 }
 
 .footer-statement p {
@@ -582,26 +584,28 @@ body[data-page="website"] {
   place-items: center;
   width: 52px;
   height: 52px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  border: 1px solid rgba(115, 243, 232, 0.23);
   border-radius: 999px;
-  background: rgba(13, 23, 39, 0.82);
-  color: #dbeafe;
+  background: linear-gradient(180deg, rgba(91, 135, 255, 0.16), rgba(5, 11, 23, 0.86));
+  color: #dffbff;
   font-weight: 900;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 14px 34px rgba(0, 0, 0, 0.2);
   transition: transform 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .social-row a:hover {
   transform: translateY(-2px);
-  border-color: rgba(115, 243, 232, 0.42);
+  border-color: rgba(115, 243, 232, 0.62);
   color: var(--accent-2);
+  box-shadow: 0 0 32px rgba(115, 243, 232, 0.18);
 }
 
 .textured-footer .footer-bottom {
   width: min(1620px, 100%);
   margin: 0 auto;
-  border-top: 1px solid rgba(148, 163, 184, 0.13);
+  border-top: 1px solid rgba(115, 243, 232, 0.16);
   padding-top: 18px;
+  color: #9fb0c8;
 }
 
 .hero-copy h1,
