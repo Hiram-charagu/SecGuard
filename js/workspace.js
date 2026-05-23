@@ -76,6 +76,7 @@ const SecguardStore = (() => {
 const WorkspacePages = {
   organizations: {
     collection: 'companies',
+    remoteTable: 'companies',
     label: 'organization',
     columns: ['name', 'plan', 'status', 'branches'],
     form: [
@@ -87,6 +88,7 @@ const WorkspacePages = {
   },
   branches: {
     collection: 'branches',
+    remoteTable: 'branches',
     label: 'branch',
     columns: ['name', 'manager', 'devices', 'alerts', 'status'],
     form: [
@@ -99,6 +101,7 @@ const WorkspacePages = {
   },
   staff: {
     collection: 'staff',
+    remoteTable: 'staff_profiles',
     label: 'staff member',
     columns: ['name', 'role', 'branch', 'status'],
     form: [
@@ -110,6 +113,7 @@ const WorkspacePages = {
   },
   'erp-connector': {
     collection: 'erpSync',
+    remoteTable: 'erp_sync_modules',
     label: 'ERP sync',
     columns: ['module', 'mode', 'status', 'lastSync'],
     form: [
@@ -121,6 +125,7 @@ const WorkspacePages = {
   },
   'theft-reports': {
     collection: 'theftReports',
+    remoteTable: 'theft_reports',
     label: 'theft report',
     columns: ['customer', 'imei', 'status', 'priority'],
     form: [
@@ -132,6 +137,7 @@ const WorkspacePages = {
   },
   'recovery-cases': {
     collection: 'recoveryCases',
+    remoteTable: 'recovery_cases',
     label: 'recovery case',
     columns: ['caseNo', 'device', 'officer', 'progress', 'status'],
     form: [
@@ -144,6 +150,7 @@ const WorkspacePages = {
   },
   'security-policies': {
     collection: 'policies',
+    remoteTable: 'security_policies',
     label: 'security policy',
     columns: ['name', 'value', 'status'],
     form: [
@@ -154,13 +161,53 @@ const WorkspacePages = {
   },
 };
 
-function renderWorkspacePage() {
+const activeRealtimeSubscriptions = new Set();
+
+function canUseSupabase() {
+  return Boolean(window.SecguardSupabase?.enabled() && window.secguardSupabase);
+}
+
+async function fetchWorkspaceRows(config) {
+  if (!canUseSupabase()) return null;
+  const { data, error } = await window.secguardSupabase
+    .from(config.remoteTable)
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) {
+    console.warn(`Supabase read failed for ${config.remoteTable}. Falling back to local workspace.`, error);
+    return null;
+  }
+  return data;
+}
+
+async function insertWorkspaceRow(config, payload) {
+  if (!canUseSupabase()) return false;
+  const { error } = await window.secguardSupabase.from(config.remoteTable).insert([payload]);
+  if (error) {
+    console.warn(`Supabase insert failed for ${config.remoteTable}. Saving locally.`, error);
+    return false;
+  }
+  return true;
+}
+
+async function updateWorkspaceRow(config, id, updates) {
+  if (!canUseSupabase()) return false;
+  const { error } = await window.secguardSupabase.from(config.remoteTable).update(updates).eq('id', id);
+  if (error) {
+    console.warn(`Supabase update failed for ${config.remoteTable}. Updating locally.`, error);
+    return false;
+  }
+  return true;
+}
+
+async function renderWorkspacePage() {
   const page = document.body.dataset.workspacePage;
   if (!page || !WorkspacePages[page]) return;
 
   const config = WorkspacePages[page];
   const data = SecguardStore.load();
-  const rows = data[config.collection] || [];
+  const remoteRows = await fetchWorkspaceRows(config);
+  const rows = remoteRows || data[config.collection] || [];
   const form = document.querySelector('[data-workspace-form]');
   const table = document.querySelector('[data-workspace-table]');
   const kpis = document.querySelector('[data-workspace-kpis]');
@@ -169,7 +216,7 @@ function renderWorkspacePage() {
     kpis.innerHTML = `
       <article class="card kpi-card"><small>Total records</small><div class="value">${rows.length}</div><p>Active ${config.label} records in local workspace.</p></article>
       <article class="card kpi-card"><small>Audit events</small><div class="value">${data.auditLogs.length}</div><p>Actions captured by Secguard audit layer.</p></article>
-      <article class="card kpi-card"><small>Supabase mode</small><div class="value">${window.SECGUARD_SUPABASE?.enabled ? 'On' : 'Local'}</div><p>Ready for URL and anon key connection.</p></article>
+      <article class="card kpi-card"><small>Supabase mode</small><div class="value">${remoteRows ? 'Live' : 'Local'}</div><p>${remoteRows ? 'Reading from Supabase tables.' : 'Using local fallback until schema/RLS is ready.'}</p></article>
       <article class="card kpi-card"><small>Workspace</small><div class="value">Live</div><p>Changes update immediately in this browser.</p></article>
     `;
   }
@@ -182,10 +229,11 @@ function renderWorkspacePage() {
       </div>
     `).join('') + `<button class="btn" type="submit">Create ${config.label}</button>`;
 
-    form.onsubmit = event => {
+    form.onsubmit = async event => {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(form).entries());
-      SecguardStore.add(config.collection, payload, config.label);
+      const savedRemote = await insertWorkspaceRow(config, payload);
+      if (!savedRemote) SecguardStore.add(config.collection, payload, config.label);
       form.reset();
       renderWorkspacePage();
     };
@@ -203,13 +251,18 @@ function renderWorkspacePage() {
     `;
 
     table.querySelectorAll('[data-mark-done]').forEach(button => {
-      button.addEventListener('click', () => {
-        SecguardStore.update(config.collection, button.dataset.markDone, { status: 'Reviewed' }, config.label);
+      button.addEventListener('click', async () => {
+        const updatedRemote = await updateWorkspaceRow(config, button.dataset.markDone, { status: 'Reviewed' });
+        if (!updatedRemote) SecguardStore.update(config.collection, button.dataset.markDone, { status: 'Reviewed' }, config.label);
         renderWorkspacePage();
       });
     });
   }
+
+  if (canUseSupabase() && config.remoteTable && !activeRealtimeSubscriptions.has(config.remoteTable)) {
+    activeRealtimeSubscriptions.add(config.remoteTable);
+    window.SecguardSupabase.subscribe(config.remoteTable, () => renderWorkspacePage());
+  }
 }
 
 window.addEventListener('DOMContentLoaded', renderWorkspacePage);
-

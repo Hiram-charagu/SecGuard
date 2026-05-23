@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,7 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/platform.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
 </head>
 <body data-page="organizations" data-workspace-page="organizations">
   <div class="page-shell">
@@ -32,7 +34,7 @@
           <div class="top-bar"><div><small>Local mode</small><strong>Supabase readiness</strong></div></div>
           <div class="activity-list">
             <div class="activity-item"><strong>Supabase URL configured</strong><span>https://wognlmuaslsrmfmrlzjv.supabase.co</span></div>
-            <div class="activity-item"><strong>Anon key required</strong><span>Add it in js/supabase-config.js to enable live backend mode.</span></div>
+            <div class="activity-item"><strong>Anon key configured</strong><span>Run database/supabase-schema.sql in Supabase, then sign up/login to test live table writes.</span></div>
           </div>
         </article>
       </div>

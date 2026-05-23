@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/platform.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
 </head>
 <body data-page="login">
   <main class="login-shell">
@@ -24,6 +27,24 @@
       <h1>Access the command layer</h1>
       <p>Login to monitor device security, fraud signals, and live tracking with premium enterprise controls.</p>
 
+      <div class="role-login-grid" aria-label="Choose user role">
+        <button class="role-login-card active" type="button" data-role-login="company_admin">
+          <span>CA</span><strong>Company Admin</strong><small>Dashboard, branches, staff, ERP sync</small>
+        </button>
+        <button class="role-login-card" type="button" data-role-login="security_officer">
+          <span>SO</span><strong>Security Officer</strong><small>Fraud center and theft reports</small>
+        </button>
+        <button class="role-login-card" type="button" data-role-login="investigator">
+          <span>IN</span><strong>Investigator</strong><small>Recovery cases and evidence</small>
+        </button>
+        <button class="role-login-card" type="button" data-role-login="sales_staff">
+          <span>SS</span><strong>Sales Staff</strong><small>Device registry and warranty handoff</small>
+        </button>
+        <button class="role-login-card" type="button" data-role-login="customer">
+          <span>CU</span><strong>Customer</strong><small>Protection portal and theft reports</small>
+        </button>
+      </div>
+
       <form class="login-form">
         <div class="input-group">
           <label for="email">Corporate Email</label>
@@ -33,11 +54,13 @@
           <label for="password">Password</label>
           <input id="password" type="password" placeholder="Enter your password" required />
         </div>
-        <button class="btn">Sign in securely</button>
+        <button class="btn" type="submit">Sign in securely</button>
+        <button class="btn btn-ghost" type="button" data-signup>Sign up workspace user</button>
+        <button class="btn btn-ghost" type="button" data-google-login>Continue with Google</button>
       </form>
 
       <div class="footer-note">
-        <p>Secguard is currently wired to a local demo backend. Production auth will connect through Supabase.</p>
+        <p>Supabase auth is initialized. Local fallback remains available while database tables and policies are being prepared.</p>
         <p><a href="index.html">Back to website</a></p>
       </div>
     </section>

@@ -484,6 +484,18 @@ function initNotifications() {
 function initLoginForm() {
   const form = document.querySelector('.login-form');
   if (!form) return;
+  let selectedRole = localStorage.getItem('secguard_active_role') || 'company_admin';
+
+  document.querySelectorAll('[data-role-login]').forEach(button => {
+    button.classList.toggle('active', button.dataset.roleLogin === selectedRole);
+    button.addEventListener('click', () => {
+      selectedRole = button.dataset.roleLogin;
+      localStorage.setItem('secguard_active_role', selectedRole);
+      document.querySelectorAll('[data-role-login]').forEach(item => item.classList.remove('active'));
+      button.classList.add('active');
+    });
+  });
+
   form.addEventListener('submit', event => {
     event.preventDefault();
     const email = form.querySelector('input[type="email"]').value;
@@ -492,8 +504,52 @@ function initLoginForm() {
       alert('Please provide email and password.');
       return;
     }
+    if (window.SecguardSupabase) {
+      window.SecguardSupabase.login(email, password, selectedRole).then(({ error, local }) => {
+        if (error && !local) {
+          alert(error.message || 'Supabase login failed. Use Sign up workspace user first if this account is new.');
+          return;
+        }
+        window.location.href = window.SecguardSupabase.routeForRole(selectedRole);
+      });
+      return;
+    }
     window.location.href = 'dashboard.html';
   });
+
+  const signupButton = document.querySelector('[data-signup]');
+  if (signupButton) {
+    signupButton.addEventListener('click', () => {
+      const email = form.querySelector('input[type="email"]').value;
+      const password = form.querySelector('input[type="password"]').value;
+      if (!email || !password) {
+        alert('Enter email and password before signup.');
+        return;
+      }
+      if (!window.SecguardSupabase) {
+        alert('Supabase is not loaded.');
+        return;
+      }
+      window.SecguardSupabase.signup(email, password, selectedRole).then(({ error }) => {
+        if (error) {
+          alert(error.message || 'Signup failed.');
+          return;
+        }
+        alert('Signup request sent. Check email confirmation if Supabase requires it.');
+      });
+    });
+  }
+
+  const googleButton = document.querySelector('[data-google-login]');
+  if (googleButton) {
+    googleButton.addEventListener('click', () => {
+      if (!window.SecguardSupabase) {
+        alert('Supabase is not loaded.');
+        return;
+      }
+      window.SecguardSupabase.googleLogin(selectedRole);
+    });
+  }
 }
 
 function initDeviceForm() {

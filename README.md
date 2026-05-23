@@ -63,13 +63,27 @@ The production backend should use Supabase as the first real foundation:
 - Storage for receipts, warranty files, and investigation evidence
 - Edge Functions for ERP webhooks, telemetry ingestion, and fraud rules
 
-Supabase project URL is configured in `js/supabase-config.js`.
+Supabase project URL and anon public key are configured in `js/supabase-config.js`.
 
 To enable live Supabase mode, open Supabase Dashboard and copy:
 
 `Project Settings -> API -> Project API keys -> anon public key`
 
-Paste that value into `anonKey` in `js/supabase-config.js` and switch `enabled` to `true` when the frontend adapter is connected.
+The browser client is initialized in `js/supabase-client.js` using:
+
+```js
+window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+```
+
+Login supports email/password signup, email/password signin, Google OAuth trigger, and role-based routing for:
+
+- Company Admin
+- Security Officer
+- Investigator
+- Sales Staff
+- Customer
+
+Run `database/supabase-schema.sql` in the Supabase SQL Editor before expecting live database writes. If a table or RLS policy blocks a request, the workspace pages fall back to local browser storage so testing can continue.
 
 ## Working Local Platform Modules
 

@@ -426,6 +426,50 @@ tbody tr:hover {
   gap: 16px;
 }
 
+.role-login-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.role-login-card {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  background: rgba(255,255,255,.045);
+  color: var(--text);
+  padding: 12px;
+}
+
+.role-login-card span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(115, 243, 232, 0.12);
+  color: var(--accent-2);
+  font-weight: 800;
+}
+
+.role-login-card strong {
+  font-size: 0.95rem;
+}
+
+.role-login-card small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.role-login-card.active,
+.role-login-card:hover {
+  border-color: rgba(115, 243, 232, 0.36);
+  background: rgba(91, 135, 255, 0.12);
+}
+
 .login-panel button {
   width: 100%;
   padding: 14px 18px;
