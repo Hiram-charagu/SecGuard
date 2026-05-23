@@ -131,7 +131,20 @@
           </div>
           <div class="input-group">
             <label for="status-input">Status</label>
-            <input id="status-input" type="text" placeholder="Active" required />
+            <select id="status-input" required>
+              <option value="pending">Pending</option>
+              <option value="active" selected>Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="erp-status-input">ERP Status</label>
+            <select id="erp-status-input" required>
+              <option value="unsold" selected>Unsold</option>
+              <option value="sold">Sold</option>
+              <option value="reserved">Reserved</option>
+              <option value="returned">Returned</option>
+            </select>
           </div>
           <div class="input-group">
             <label for="risk-input">Risk</label>

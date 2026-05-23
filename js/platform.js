@@ -120,13 +120,14 @@ function renderDashboardKPIs() {
 function renderDashboardBranches() {
   if (currentPage !== 'dashboard') return;
   const branchesList = document.getElementById('branches-list');
+  if (!branchesList) return;
   const branches = dataManager.getBranches().slice(0, 2);
 
   branchesList.innerHTML = branches.map(branch => `
     <div class="device-card">
-      <div class="status-pill"><span></span>${branch.location} • ${branch.alerts} alerts</div>
+      <div class="status-pill"><span></span>${branch.location} &bull; ${branch.alerts} alerts</div>
       <div><strong>${branch.name}</strong></div>
-      <p>Staff: ${branch.staff} • Devices tracked: ${branch.devices} • Active security scans</p>
+      <p>Staff: ${branch.staff} &bull; Devices tracked: ${branch.devices} &bull; Active security scans</p>
     </div>
   `).join('');
 }
@@ -134,12 +135,13 @@ function renderDashboardBranches() {
 function renderDashboardAlerts() {
   if (currentPage !== 'dashboard') return;
   const alertsList = document.getElementById('alerts-list');
+  if (!alertsList) return;
   const alerts = dataManager.getFraudAlerts({ status: 'open' });
 
   alertsList.innerHTML = alerts.slice(0, 3).map(alert => `
     <div class="activity-item">
       <div><strong>${alert.description}</strong></div>
-      <span>IMEI ${dataManager.formatIMEI(alert.device_id)} • ${alert.branch} • ${dataManager.formatDate(alert.created_at)}</span>
+      <span>Device ${alert.device_id} &bull; ${alert.branch} &bull; ${dataManager.formatDate(alert.created_at)}</span>
     </div>
   `).join('');
 }
@@ -189,9 +191,9 @@ function renderDeviceIntelligence() {
   if (deviceList) {
     deviceList.innerHTML = devices.map(device => `
       <div class="device-card">
-        <div class="status-pill"><span></span>IMEI ${dataManager.formatIMEI(device.imei)} • ${dataManager.getRiskLevel(device.risk_score)} risk</div>
+        <div class="status-pill"><span></span>IMEI ${dataManager.formatIMEI(device.imei)} &bull; ${dataManager.getRiskLevel(device.risk_score)} risk</div>
         <div><strong>${device.model}</strong></div>
-        <p>Activation: ${device.activation_status} • ERP: ${device.erp_status} • Last SIM: ${device.last_sim_change ? device.last_sim_change + 'm ago' : 'Never'}</p>
+        <p>Activation: ${device.activation_status} &bull; ERP: ${device.erp_status} &bull; Last SIM: ${device.last_sim_change ? device.last_sim_change + 'm ago' : 'Never'}</p>
       </div>
     `).join('');
   }
@@ -224,17 +226,17 @@ function renderFraudDetection() {
   
   if (fraudKpiGrid) {
     const metrics = {
-      suspicious: dataManager.getDevices().filter(d => d.risk_score > 50).length + 46,
-      anomalies: alerts.length + 120,
+      suspicious: dataManager.getDevices().filter(d => d.risk_score > 50).length,
+      anomalies: alerts.length,
       cases: dataManager.data.investigations.filter(i => i.status !== 'ready-for-closure').length,
-      resolved: 64,
+      resolved: dataManager.getFraudAlerts().filter(alert => alert.status !== 'open').length,
     };
     
     const kpis = [
-      { label: 'Suspicious devices', value: metrics.suspicious, trend: '24 urgent', class: 'high' },
-      { label: 'Anomaly events', value: metrics.anomalies, trend: 'Critical', class: 'critical' },
+      { label: 'Suspicious devices', value: metrics.suspicious, trend: metrics.suspicious ? 'Review' : 'Clear', class: metrics.suspicious ? 'high' : 'low' },
+      { label: 'Anomaly events', value: metrics.anomalies, trend: metrics.anomalies ? 'Active' : 'Clear', class: metrics.anomalies ? 'critical' : 'low' },
       { label: 'Open cases', value: metrics.cases, trend: 'In progress', class: 'medium' },
-      { label: 'Resolved issues', value: metrics.resolved, trend: 'Today', class: 'low' },
+      { label: 'Resolved issues', value: metrics.resolved, trend: 'Reviewed', class: 'low' },
     ];
     
     fraudKpiGrid.innerHTML = kpis.map(kpi => `
@@ -259,7 +261,7 @@ function renderFraudDetection() {
       <div class="alert-item">
         <div>
           <strong>${alert.description}</strong>
-          <p>${alert.branch} • ${alert.devices_affected} device${alert.devices_affected !== 1 ? 's' : ''} matched • escalated</p>
+          <p>${alert.branch} &bull; ${alert.devices_affected} device${alert.devices_affected !== 1 ? 's' : ''} matched &bull; escalated</p>
         </div>
         <span class="badge ${alert.severity}">${alert.severity}</span>
       </div>
@@ -268,8 +270,8 @@ function renderFraudDetection() {
 
   // Render fraud table
   const tables = document.querySelectorAll('table tbody');
-  if (tables.length > 1) {
-    tables[1].innerHTML = dataManager.getFraudAlerts().map((alert, idx) => `
+  if (tables.length) {
+    tables[tables.length - 1].innerHTML = dataManager.getFraudAlerts().map(alert => `
       <tr>
         <td>${alert.id.replace('alert_', '')}</td>
         <td>${alert.device_id}</td>
@@ -292,11 +294,18 @@ function renderCustomerPortal() {
   const customers = dataManager.getCustomers();
   
   if (customerKpiGrid) {
+    const theftReports = customers.reduce((sum, customer) => sum + Number(customer.theft_reports || 0), 0);
+    const avgRecovery = customers.length
+      ? Math.round(customers.reduce((sum, customer) => sum + Number(customer.recovery_progress || 0), 0) / customers.length)
+      : 0;
+    const warrantyCoverage = customers.length
+      ? Math.round((customers.filter(customer => customer.protection_status === 'active').length / customers.length) * 100)
+      : 0;
     const kpis = [
-      { label: 'Protected units', value: customers.length + 3900, trend: '+6%', class: 'medium' },
-      { label: 'Theft reports', value: 24, trend: 'Ongoing', class: 'high' },
-      { label: 'Recovery progress', value: '72%', trend: 'Strong', class: 'low' },
-      { label: 'Warranty coverage', value: '88%', trend: 'Healthy', class: 'low' },
+      { label: 'Protected units', value: customers.filter(customer => customer.protection_status === 'active').length, trend: 'Live', class: 'medium' },
+      { label: 'Theft reports', value: theftReports, trend: theftReports ? 'Ongoing' : 'Clear', class: theftReports ? 'high' : 'low' },
+      { label: 'Recovery progress', value: `${avgRecovery}%`, trend: 'Average', class: avgRecovery > 70 ? 'low' : 'medium' },
+      { label: 'Warranty coverage', value: `${warrantyCoverage}%`, trend: 'Protected', class: warrantyCoverage > 75 ? 'low' : 'medium' },
     ];
     
     customerKpiGrid.innerHTML = kpis.map(kpi => `
@@ -319,8 +328,8 @@ function renderCustomerPortal() {
     deviceList.innerHTML = customers.slice(0, 2).map(customer => `
       <div class="device-card">
         <div class="status-pill"><span></span>Customer: ${customer.name}</div>
-        <div><strong>${customer.protection_status === 'active' ? '✓ Protected' : '⚠ Under Review'}</strong></div>
-        <p>Devices: ${customer.devices.length} • Recovery: ${customer.recovery_progress}% • Theft reports: ${customer.theft_reports}</p>
+        <div><strong>${customer.protection_status === 'active' ? 'Protected' : 'Under Review'}</strong></div>
+        <p>Devices: ${customer.devices.length} &bull; Recovery: ${customer.recovery_progress}% &bull; Theft reports: ${customer.theft_reports}</p>
       </div>
     `).join('');
   }
@@ -360,7 +369,7 @@ function renderAuditLogs() {
   if (auditTable) {
     auditTable.innerHTML = logs.map(log => `
       <tr>
-        <td>${dataManager.formatDate(log.time).includes('ago') ? new Date().toLocaleTimeString().slice(0, 5) + ' • ' + log.time.toLocaleDateString() : log.time.toLocaleTimeString()}</td>
+        <td>${dataManager.formatDate(log.time).includes('ago') ? new Date().toLocaleTimeString().slice(0, 5) + ' &bull; ' + log.time.toLocaleDateString() : log.time.toLocaleTimeString()}</td>
         <td>${log.actor}</td>
         <td>${log.action}</td>
         <td>${log.target}</td>
@@ -565,6 +574,7 @@ function initDeviceForm() {
     const imei = document.getElementById('imei-input').value.trim();
     const model = document.getElementById('model-input').value.trim();
     const status = document.getElementById('status-input').value.trim();
+    const erpStatus = document.getElementById('erp-status-input').value.trim();
     const risk = document.getElementById('risk-input').value;
 
     if (!imei || !model || !status) {
@@ -580,10 +590,10 @@ function initDeviceForm() {
       activation_status: status,
       sim_changes: 0,
       last_sim_change: 0,
-      erp_status: 'Synced',
-      erp_sync_status: 'Synced',
+      erp_status: erpStatus,
+      erp_sync_status: erpStatus === 'unsold' && status === 'active' ? 'desynced' : 'synced',
       risk_score: riskScore,
-      assigned_branch: 'Field Office',
+      branch: 'branch_alpha',
       last_seen: 'Just now',
       battery_health: 'Good',
       network_load: 'Normal',
@@ -591,9 +601,27 @@ function initDeviceForm() {
       active: true,
     }).then(() => {
       renderDeviceIntelligence();
+      renderFraudDetection();
+      renderDashboardAlerts();
       deviceForm.reset();
-      alert('Mock device added successfully.');
+      alert('Device added. If it is active and unsold, Secguard generated a fraud alert.');
     });
+  });
+}
+
+function initCustomerActions() {
+  if (currentPage !== 'customer') return;
+  const createButton = document.querySelector('.page-header .btn');
+  if (!createButton) return;
+
+  createButton.addEventListener('click', () => {
+    dataManager.createCustomerCase();
+    renderCustomerPortal();
+    renderTrackingPage();
+    createButton.textContent = 'Case created';
+    setTimeout(() => {
+      createButton.textContent = 'Create new case';
+    }, 1400);
   });
 }
 
@@ -633,7 +661,7 @@ function renderTrackingPage() {
     return {
       ...device,
       signalStrength,
-      signalLabel: '▮'.repeat(signalStrength) + '▯'.repeat(5 - signalStrength),
+      signalLabel: `${signalStrength}/5 bars`,
       lastSeenLabel: dataManager.formatDate(device.timestamp),
       routeStatus,
     };
@@ -699,14 +727,14 @@ function renderTrackingPage() {
           <span></span>${dataManager.formatIMEI(device.imei)}
         </div>
         <div><strong>${device.model}</strong></div>
-        <p>Last online: ${device.lastSeenLabel} • Signal: ${device.signalStrength} bars • ${device.routeStatus}</p>
+        <p>Last online: ${device.lastSeenLabel} &bull; Signal: ${device.signalStrength} bars &bull; ${device.routeStatus}</p>
       </div>
     `).join('');
   }
 
   const mapSummary = document.getElementById('tracking-map-summary');
   if (mapSummary) {
-    mapSummary.textContent = `${liveDevices.length} live devices • ${desyncedDevices.length} ERP desyncs • ${offRouteDevices.length} off-route alerts`; 
+    mapSummary.innerHTML = `${liveDevices.length} live devices &bull; ${desyncedDevices.length} ERP desyncs &bull; ${offRouteDevices.length} off-route alerts`; 
   }
 
   const trackingOffRoutePill = document.getElementById('tracking-offroute-pill');
@@ -741,17 +769,114 @@ function initTrackingRefresh() {
   });
 }
 
+function initDashboardActions() {
+  if (currentPage !== 'dashboard') return;
+  const buttons = Array.from(document.querySelectorAll('.top-actions .btn'));
+  const exportButton = buttons.find(button => button.textContent.trim().toLowerCase().includes('export'));
+  const resolveButton = buttons.find(button => button.textContent.trim().toLowerCase().includes('resolve'));
+
+  if (exportButton) {
+    exportButton.addEventListener('click', () => {
+      const snapshot = dataManager.exportSnapshot();
+      const blob = new Blob([snapshot], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `secguard-report-${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      exportButton.textContent = 'Report exported';
+      renderAuditLogs();
+      setTimeout(() => {
+        exportButton.textContent = 'Export report';
+      }, 1400);
+    });
+  }
+
+  if (resolveButton) {
+    resolveButton.addEventListener('click', () => {
+      const resolved = dataManager.resolveOpenAlerts();
+      renderAllPages();
+      resolveButton.textContent = `${resolved} reviewed`;
+      setTimeout(() => {
+        resolveButton.textContent = 'Resolve alerts';
+      }, 1400);
+    });
+  }
+}
+
+function initFraudActions() {
+  if (currentPage !== 'fraud') return;
+  const incidentButton = document.querySelector('.page-header .btn');
+  if (!incidentButton) return;
+  incidentButton.addEventListener('click', () => {
+    const openAlerts = dataManager.getFraudAlerts({ status: 'open' }).length;
+    dataManager.addAudit('Opened incident board', `${openAlerts} open alert(s)`);
+    renderFraudDetection();
+    incidentButton.textContent = `${openAlerts} incidents loaded`;
+    setTimeout(() => {
+      incidentButton.textContent = 'Open incident board';
+    }, 1400);
+  });
+}
+
+function renderSettingsPage() {
+  if (currentPage !== 'settings') return;
+  const settings = dataManager.getSettings();
+  const fields = {
+    workspace: document.getElementById('workspace'),
+    timezone: document.getElementById('timezone'),
+    notify: document.getElementById('notify'),
+    mfa: document.getElementById('mfa'),
+    risk: document.getElementById('risk'),
+    erpLink: document.getElementById('erp-link'),
+    adminNotes: document.getElementById('admin-notes'),
+  };
+
+  Object.entries(fields).forEach(([key, field]) => {
+    if (field && settings[key] !== undefined) field.value = settings[key];
+  });
+}
+
+function initSettingsActions() {
+  if (currentPage !== 'settings') return;
+  const saveButton = document.querySelector('.page-header .btn');
+  if (!saveButton) return;
+
+  saveButton.addEventListener('click', () => {
+    dataManager.saveSettings({
+      workspace: document.getElementById('workspace')?.value || '',
+      timezone: document.getElementById('timezone')?.value || '',
+      notify: document.getElementById('notify')?.value || '',
+      mfa: document.getElementById('mfa')?.value || '',
+      risk: document.getElementById('risk')?.value || '',
+      erpLink: document.getElementById('erp-link')?.value || '',
+      adminNotes: document.getElementById('admin-notes')?.value || '',
+    });
+    saveButton.textContent = 'Configuration saved';
+    setTimeout(() => {
+      saveButton.textContent = 'Save configuration';
+    }, 1400);
+  });
+}
+
 function renderAnalyticsPage() {
   if (currentPage !== 'analytics') return;
   
   const analyticsKpiGrid = document.querySelector('.kpi-grid');
   
   if (analyticsKpiGrid) {
+    const devices = dataManager.getDevices();
+    const metrics = dataManager.getDashboardMetrics();
+    const averageRisk = devices.length
+      ? Math.round(devices.reduce((sum, device) => sum + Number(device.risk_score || 0), 0) / devices.length)
+      : 0;
+    const branchAnomalies = dataManager.getBranches().filter(branch => Number(branch.alerts || 0) > 10).length;
     const kpis = [
-      { label: 'Alert coverage', value: '82%', trend: 'Wide', class: 'low' },
-      { label: 'Risk index', value: '68', trend: 'Medium', class: 'medium' },
-      { label: 'Branch anomalies', value: '13', trend: 'Elevated', class: 'high' },
-      { label: 'Investigation velocity', value: '1.9d', trend: 'Fast', class: 'low' },
+      { label: 'Alert coverage', value: `${metrics.fraudAlerts}`, trend: 'Open alerts', class: metrics.fraudAlerts ? 'high' : 'low' },
+      { label: 'Risk index', value: averageRisk, trend: averageRisk > 60 ? 'High' : 'Managed', class: averageRisk > 60 ? 'high' : 'medium' },
+      { label: 'Branch anomalies', value: branchAnomalies, trend: branchAnomalies ? 'Elevated' : 'Clear', class: branchAnomalies ? 'high' : 'low' },
+      { label: 'Open investigations', value: metrics.openInvestigations, trend: 'Active', class: metrics.openInvestigations ? 'medium' : 'low' },
     ];
     
     analyticsKpiGrid.innerHTML = kpis.map(kpi => `
@@ -775,13 +900,17 @@ async function initPage() {
 
   if (typeof dataManager === 'undefined') return;
 
+  await dataManager.load();
+
   initCharts();
   initNotifications();
   initDeviceForm();
   initTrackingRefresh();
+  initDashboardActions();
+  initFraudActions();
+  initCustomerActions();
+  initSettingsActions();
   initActiveNav();
-
-  await dataManager.load();
 
   // Render page-specific data
   renderDashboardKPIs();
@@ -793,6 +922,7 @@ async function initPage() {
   renderAuditLogs();
   renderAnalyticsPage();
   renderTrackingPage();
+  renderSettingsPage();
 
   startLiveSimulation();
 }

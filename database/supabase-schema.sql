@@ -6,6 +6,7 @@ create table if not exists companies (
   name text not null,
   plan text default 'Business',
   status text default 'active',
+  branches int default 0,
   created_at timestamptz default now()
 );
 
