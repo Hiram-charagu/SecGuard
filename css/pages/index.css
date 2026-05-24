@@ -1,1 +1,94 @@
-/* Home page specific visuals live here. Shared public layout remains in css/website.css. */
+.bento-large {
+  display: grid;
+  align-content: start;
+}
+
+.registry-dossier {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 15px;
+  border: 1px solid rgba(115, 243, 232, 0.15);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(91, 135, 255, 0.18), transparent 14rem),
+    rgba(4, 10, 23, 0.64);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dossier-device {
+  display: grid;
+  gap: 5px;
+}
+
+.dossier-device strong {
+  font-size: 1.08rem;
+}
+
+.dossier-device small {
+  color: #9fb1d9;
+}
+
+.dossier-status {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: rgba(53, 212, 138, 0.14);
+  color: #7ce8a1;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dossier-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dossier-metrics span {
+  display: grid;
+  gap: 3px;
+  border-radius: 16px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #d7e2ff;
+  font-size: 0.84rem;
+}
+
+.dossier-metrics strong {
+  color: #73f3e8;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.dossier-timeline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffc4d5;
+  font-weight: 800;
+}
+
+.dossier-timeline span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ff5d8f;
+  box-shadow: 0 0 0 8px rgba(255, 93, 143, 0.11), 0 0 28px rgba(255, 93, 143, 0.72);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.dossier-timeline p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: #ffc4d5;
+}
+
+@media (max-width: 620px) {
+  .dossier-metrics {
+    grid-template-columns: 1fr;
+  }
+}
