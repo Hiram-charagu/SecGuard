@@ -105,7 +105,7 @@ const SecguardAuth = (() => {
       }
     }
 
-    state.demo = safeStorageGet('secguard_demo_session') === 'true';
+    state.demo = safeStorageGet('secguard_demo_session') === 'true' || safeStorageGet('secguard_active_role') !== null;
     if (state.demo) setRole(safeStorageGet('secguard_active_role') || 'company_admin');
     state.ready = true;
     return state;

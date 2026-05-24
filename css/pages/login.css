@@ -1,0 +1,15 @@
+.login-panel {
+  width: min(500px, 100%);
+}
+
+.login-form {
+  gap: 12px;
+}
+
+.login-form .btn {
+  min-height: 48px;
+}
+
+.login-more-actions .btn {
+  min-height: 44px;
+}

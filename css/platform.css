@@ -147,6 +147,22 @@ nav a span {
   gap: 9px;
 }
 
+.sidebar-empty {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(115, 243, 232, 0.14);
+  border-radius: 18px;
+  background: rgba(115, 243, 232, 0.055);
+  padding: 14px;
+  color: var(--text);
+}
+
+.sidebar-empty span {
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
 .notification-bell {
   display: flex;
   justify-content: space-between;
@@ -636,6 +652,24 @@ tbody tr:hover {
 .login-panel button {
   width: 100%;
   padding: 14px 18px;
+}
+
+.login-more-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.login-more-actions summary {
+  cursor: pointer;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 800;
+  padding: 6px;
+}
+
+.login-more-actions[open] {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 10px;
 }
 
 .footer-note {

@@ -663,6 +663,12 @@ function initNotifications() {
   });
 }
 
+function updateDataModeIndicator() {
+  const mode = document.querySelector('[data-data-mode]');
+  if (!mode || typeof dataManager === 'undefined') return;
+  mode.textContent = dataManager.usingRemote ? 'Supabase live data' : 'Demo data fallback';
+}
+
 function initLoginForm() {
   const form = document.querySelector('.login-form');
   if (!form) return;
@@ -1402,6 +1408,7 @@ async function initPage() {
     if (typeof dataManager === 'undefined') return;
 
     await dataManager.load();
+    updateDataModeIndicator();
     if (!dataManager.storageAvailable) showToast('Storage is unavailable. Running in memory-only demo mode.');
 
     initCharts();
