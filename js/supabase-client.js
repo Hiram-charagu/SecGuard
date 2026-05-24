@@ -12,7 +12,7 @@ const SecguardSupabase = (() => {
   }
 
   async function login(email, password, role) {
-    if (!client) return { data: null, error: null, local: true };
+    if (!enabled()) return { data: null, error: null, local: true };
     const result = await client.auth.signInWithPassword({ email, password });
     if (!result.error && result.data?.user) {
       window.SecguardAuth?.setRole(result.data.user.user_metadata?.role || role || 'company_admin');
@@ -22,7 +22,7 @@ const SecguardSupabase = (() => {
 
   async function signup(email, password, role) {
     window.SecguardAuth?.setRole(role || 'company_admin');
-    if (!client) return { data: null, error: null, local: true };
+    if (!enabled()) return { data: null, error: new Error('Supabase is disabled for localStorage-first testing.'), local: true };
     return client.auth.signUp({
       email,
       password,
@@ -31,7 +31,7 @@ const SecguardSupabase = (() => {
   }
 
   async function googleLogin(role) {
-    if (!client) return { error: new Error('Supabase client is not available') };
+    if (!enabled()) return { error: new Error('Supabase is disabled for localStorage-first testing.') };
     return client.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -42,35 +42,35 @@ const SecguardSupabase = (() => {
   }
 
   async function getSession() {
-    if (!client) return { data: { session: null }, error: null };
+    if (!enabled()) return { data: { session: null }, error: null };
     return client.auth.getSession();
   }
 
   async function getUser() {
-    if (!client) return { data: { user: null }, error: null };
+    if (!enabled()) return { data: { user: null }, error: null };
     return client.auth.getUser();
   }
 
   async function logout() {
     window.SecguardAuth?.clearSessionState();
-    if (client) await client.auth.signOut();
+    if (enabled()) await client.auth.signOut();
     window.location.href = 'login.html';
   }
 
   async function resetPassword(email) {
-    if (!client) return { error: new Error('Supabase client is not available') };
+    if (!enabled()) return { error: new Error('Supabase is disabled for localStorage-first testing.') };
     return client.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/login.html`,
     });
   }
 
   async function uploadFile(bucket, path, file) {
-    if (!client) return { data: null, error: new Error('Supabase client is not available') };
+    if (!enabled()) return { data: null, error: new Error('Supabase is disabled for localStorage-first testing.') };
     return client.storage.from(bucket).upload(path, file, { upsert: true });
   }
 
   function subscribe(table, callback) {
-    if (!client) return null;
+    if (!enabled()) return null;
     return client
       .channel(`${table}-channel`)
       .on('postgres_changes', { event: '*', schema: 'public', table }, callback)

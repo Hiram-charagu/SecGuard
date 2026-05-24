@@ -1,0 +1,1 @@
+window.SecguardPage = 'theft-reports';

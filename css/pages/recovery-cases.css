@@ -1,0 +1,5 @@
+@import url('./workspace.css');
+
+body[data-workspace-page="recovery-cases"] .page-header h2 {
+  color: #f7fbff;
+}

@@ -1,0 +1,1 @@
+window.SecguardPage = 'security-policies';

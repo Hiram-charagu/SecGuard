@@ -43,6 +43,23 @@ async function renderPlatformNav() {
       <div class="activity-list" data-notifications-list></div>
     </aside>
   `;
+  bindPlatformNav(target);
+}
+
+function bindPlatformNav(target) {
+  const toggle = target.querySelector('.menu-toggle');
+  toggle?.addEventListener('click', () => {
+    target.classList.toggle('sidebar-open');
+  });
+
+  target.querySelector('[data-logout]')?.addEventListener('click', () => {
+    window.SecguardSupabase?.logout?.();
+  });
+
+  const panel = target.querySelector('[data-notifications-panel]');
+  target.querySelectorAll('[data-notifications-toggle]').forEach(button => {
+    button.addEventListener('click', () => panel?.classList.toggle('open'));
+  });
 }
 
 window.addEventListener('DOMContentLoaded', renderPlatformNav);

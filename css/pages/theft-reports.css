@@ -1,0 +1,5 @@
+@import url('./workspace.css');
+
+body[data-workspace-page="theft-reports"] .page-header h2 {
+  color: #f7fbff;
+}

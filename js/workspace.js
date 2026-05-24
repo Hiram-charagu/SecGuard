@@ -31,17 +31,21 @@ const SecguardStore = (() => {
     ],
   };
 
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
   function load() {
     try {
       const saved = localStorage.getItem(key);
       if (!saved) {
         localStorage.setItem(key, JSON.stringify(seed));
-        return structuredClone(seed);
+        return clone(seed);
       }
       return JSON.parse(saved);
     } catch (error) {
       console.warn('Workspace storage unavailable. Running workspace in memory-only mode.', error);
-      return structuredClone(seed);
+      return clone(seed);
     }
   }
 
@@ -222,6 +226,8 @@ async function renderWorkspacePage() {
   const kpis = document.querySelector('[data-workspace-kpis]');
 
   if (kpis) {
+    const mode = document.querySelector('[data-data-mode]');
+    if (mode) mode.textContent = remoteRows ? 'Supabase live data' : 'Demo data fallback';
     kpis.innerHTML = `
       <article class="card kpi-card"><small>Total records</small><div class="value">${rows.length}</div><p>Active ${config.label} records in local workspace.</p></article>
       <article class="card kpi-card"><small>Audit events</small><div class="value">${data.auditLogs.length}</div><p>Actions captured by Secguard audit layer.</p></article>
